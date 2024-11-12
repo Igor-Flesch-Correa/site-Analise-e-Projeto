@@ -10,7 +10,7 @@ export class ProductsService {
   async create(createProductDto: CreateProductDto) {
     try {
       const result = await this.prismaService.product.create({
-        data: createProductDto,
+        data: createProductDto
       });
       return result;
     } catch (error) {
@@ -21,14 +21,14 @@ export class ProductsService {
         // P2002: Chave única violada (por exemplo, nome duplicado)
         throw new HttpException(
           'A product with this unique field already exists.',
-          HttpStatus.CONFLICT,
+          HttpStatus.CONFLICT
         );
       }
 
       // Lança uma exceção genérica para outros casos
       throw new HttpException(
         'Error creating product',
-        HttpStatus.INTERNAL_SERVER_ERROR,
+        HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
@@ -40,7 +40,7 @@ export class ProductsService {
 
   async findOne(id: number) {
     const product = await this.prismaService.product.findUnique({
-      where: { id },
+      where: { id }
     });
 
     if (!product) {
@@ -53,15 +53,23 @@ export class ProductsService {
   update(id: number, updateProductDto: UpdateProductDto) {
     const result = this.prismaService.product.update({
       where: { id: id },
-      data: updateProductDto,
+      data: updateProductDto
     });
     return result;
   }
 
-  remove(id: number) {
-    const result = this.prismaService.product.delete({
-      where: { id: id },
-    });
-    return result;
+  async remove(id: number) {
+    try {
+      const result = await this.prismaService.product.delete({
+        where: { id: id }
+      });
+      return result;
+    } catch (error) {
+      // Loga o erro completo no console para debug
+      console.error('Error deleting product:', error);
+
+      // Lança uma exceção genérica para todos os casos
+      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+    }
   }
 }
