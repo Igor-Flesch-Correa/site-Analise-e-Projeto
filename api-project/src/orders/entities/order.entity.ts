@@ -2,14 +2,13 @@ import { Customer } from '@prisma/client';
 
 export class Order {
   id: number;
-  clienteId: number;
-  costumer: Customer;
+  customerId: number; // Nome ajustado para refletir o schema Prisma
+  customer: Customer; // Relacionamento com Customer
   items: {
-    id: number;
-    produtoId: number;
-    quantidade: number;
-    precoUnitario: number;
-  }[];
+    productId: number; // Nome ajustado para refletir o schema
+    quantity: number;
+    unitPrice: number;
+  }[]; // Array de itens como JSON no schema
   totalPrice: number;
   paymentMethod: string;
   createdAt: Date;
@@ -17,13 +16,12 @@ export class Order {
 
   constructor(
     id: number,
-    clienteId: number,
+    customerId: number,
     customer: Customer,
     items: {
-      id: number;
-      produtoId: number;
-      quantidade: number;
-      precoUnitario: number;
+      productId: number;
+      quantity: number;
+      unitPrice: number;
     }[],
     totalPrice: number,
     paymentMethod: string,
@@ -31,12 +29,12 @@ export class Order {
     status: string
   ) {
     this.id = id;
-    this.clienteId = clienteId;
+    this.customerId = customerId;
     this.customer = customer;
     this.items = items;
     this.totalPrice = totalPrice;
-    this.createdAt = createdAt;
     this.paymentMethod = paymentMethod;
+    this.createdAt = createdAt;
     this.status = status;
   }
 }

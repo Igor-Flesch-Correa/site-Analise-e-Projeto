@@ -1,41 +1,79 @@
 import {
   IsNumber,
-  IsDate,
   IsString,
   IsArray,
   ValidateNested,
-  IsObject
+  IsOptional
 } from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 
 class OrderItem {
+  @ApiProperty({
+    description: 'ID of the product',
+    example: 1
+  })
   @IsNumber()
-  produtoId: number;
+  productId: number;
 
+  @ApiProperty({
+    description: 'Quantity of the product',
+    example: 2
+  })
   @IsNumber()
-  quantidade: number;
+  quantity: number;
 
+  @ApiProperty({
+    description: 'Unit price of the product',
+    example: 50.0
+  })
   @IsNumber()
-  precoUnitario: number;
+  unitPrice: number;
 }
 
 export class CreateOrderDto {
-  @IsNumber()
-  clienteId: number;
-
-  @IsDate()
-  dataCriacao: Date;
-
-  @IsDate()
-  dataEntrega: Date;
-
+  @ApiProperty({
+    description: 'Status of the order (default: OPEN)',
+    example: 'OPEN',
+    required: false // Opcional
+  })
+  @IsOptional()
   @IsString()
-  status: string;
+  status?: string;
 
+  @ApiProperty({
+    description: 'ID of the customer placing the order',
+    example: 1
+  })
   @IsNumber()
-  total: number;
+  customerId: number;
 
+  @ApiProperty({
+    description: 'Total price of the order',
+    example: 100.0
+  })
+  @IsNumber()
+  totalPrice: number;
+
+  @ApiProperty({
+    description: 'Payment method for the order',
+    example: 'credit_card'
+  })
+  @IsString()
+  paymentMethod: string;
+
+  @ApiProperty({
+    description: 'List of items in the order',
+    example: [
+      {
+        productId: 1,
+        quantity: 2,
+        unitPrice: 50.0
+      }
+    ]
+  })
   @IsArray()
   @ValidateNested({ each: true })
-  @IsObject({ each: true })
-  itens: OrderItem[];
+  @Type(() => OrderItem) // Necessário para validação aninhada
+  items: OrderItem[];
 }
