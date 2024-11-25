@@ -8,12 +8,13 @@ import {
   Delete,
   HttpCode,
   HttpStatus,
-  ParseIntPipe
+  ParseIntPipe,
+  Query
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiQuery } from '@nestjs/swagger';
 
 @ApiTags('Products') // Categoria de documentação no Swagger
 @Controller('products')
@@ -30,10 +31,17 @@ export class ProductsController {
   }
 
   @Get()
-  @ApiOperation({ summary: 'Retrieve all products' }) // Descrição do endpoint
+  @ApiOperation({ summary: 'Get products with pagination and category filter' })
   @ApiResponse({ status: 200, description: 'List of products' })
-  async findAll() {
-    return await this.productsService.findAll();
+  @ApiQuery({ name: 'page', required: false, example: 1, description: 'Page number' })
+  @ApiQuery({ name: 'limit', required: false, example: 10, description: 'Items per page' })
+  @ApiQuery({ name: 'category', required: false, example: 'Electronics', description: 'Filter by category' })
+  async findAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+    @Query('category') category?: string,
+  ) {
+    return await this.productsService.findAll(page, limit, category);
   }
 
   @Get(':id')

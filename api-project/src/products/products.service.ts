@@ -33,9 +33,26 @@ export class ProductsService {
     }
   }
 
-  findAll() {
-    const result = this.prismaService.product.findMany();
-    return result;
+  async findAll(page: number, limit: number, category?: string) {
+    const offset = (page - 1) * limit; // Calcula o deslocamento para a paginação
+
+    const where = category ? { category } : {}; // Adiciona filtro por categoria, se fornecido
+
+    const products = await this.prismaService.product.findMany({
+      where,
+      skip: offset,
+      take: +limit,
+    });
+
+    const totalCount = await this.prismaService.product.count({ where }); // Total de itens para paginação
+
+    return {
+      data: products,
+      total: totalCount,
+      page,
+      limit,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   }
 
   async findOne(id: number) {
