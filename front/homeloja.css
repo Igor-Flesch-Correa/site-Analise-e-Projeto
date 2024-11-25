@@ -1,0 +1,425 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto";
+    color: #4A2714;
+    font-weight: 500;
+}
+
+/*---------------------------------------------------------------------------------------------*/
+
+#mensagemNaoEncontrado {
+    color: white;
+    text-align: center;
+    font-size: 5vw;
+    border: 2px solid red; /* Borda vermelha */
+}
+
+#cabeca {
+    display: flex;
+    justify-content: space-between;
+    height: 9vh;
+    background-color: #4A2714;
+    background-size: cover;
+    position: relative;
+    align-items: center;
+    border: 2px solid blue; /* Borda azul */
+}
+
+#lojaLink {
+    height: 90%;
+    border: 2px solid green; /* Borda verde */
+}
+
+#logoacabeca {
+    height: 100%;
+    border: 2px solid rgb(0, 9, 128); /* Borda verde */
+}
+
+#alinhadireita {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 70%;
+    border: 2px solid green; /* Borda verde */
+}
+
+#caixa-pesquisa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6%;
+    border-radius: 1vh;
+    min-height: 35%;
+    background: linear-gradient(200deg, #4A2714 5%, #D1B8A1 66%, #fff);
+    box-shadow: 0px 0px 100px 3px #D1B8A1;
+    
+}
+
+#lupa {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+#caixaLogin {
+    color: #D1B8A1;
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+    border: 2px solid purple; /* Borda roxa */
+}
+
+#bemVindo {
+    color: white;
+}
+
+.botao {
+    color: white;
+    background: linear-gradient(30deg, #4A2714 5%, #D1B8A1 66%, #fff);
+    background-size: 100% 100%;
+    border: 2px solid orange; /* Borda laranja */
+}
+
+.botao:hover {
+    transform: scale(1.1);
+}
+
+#carrinhoLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3.5vw;
+    
+    border: 2px solid pink; /* Borda rosa */
+}
+
+#imagemcarrinho {
+    height: 85%;
+    border-radius: 1vh;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#imagemcarrinho:hover {
+    transform: scale(1.1);
+}
+
+#botao-menu {
+    margin-right: auto;
+    margin-left: auto;
+    color: white;
+    font-size: 3vh;
+    padding: 1vh;
+    border: 1px solid #1c9fff;
+    border-radius: .6vh;
+    cursor: pointer;
+    background: linear-gradient(30deg, #110c5e 5%, #1c9fff 66%, #cbf6ff);
+    background-size: 100% 100%;
+    border: 2px solid brown; /* Borda marrom */
+}
+
+#botao-menu:hover {
+    transform: scale(1.1);
+}
+
+#menu-retratil {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    z-index: 2;
+    top: 100%;
+    right: 0;
+    padding: 5%;
+    display: none;
+    backdrop-filter: saturate(100%) blur(30px);
+    border: 2px solid cyan; /* Borda ciano */
+}
+/*
+carrossel inicio
+*/
+.carrossel {
+    position: relative;
+    width: 100%;
+    height: 40vh; /* 30% da altura da tela */
+    overflow: hidden;
+}
+
+/* Slides */
+.slides {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease-in-out;
+}
+
+.slide {
+    flex: 0 0 100%; /* Cada slide ocupa 100% da largura do container */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    height: 100%;
+}
+
+.slide:nth-child(1) {
+    background-color: #D1B8A1;
+}
+
+.slide:nth-child(2) {
+    background-image: url('https://conteudo.imguol.com.br/c/entretenimento/a0/2018/02/26/batata-frita-1519671488107_v2_4x3.jpg');
+}
+
+.slide:nth-child(3) {
+    background-color:#F5EDE1;
+}
+
+/* Botões de navegação */
+.botao {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.botao.anterior {
+    left: 10px;
+}
+
+.botao.proximo {
+    right: 10px;
+}
+
+/* Indicadores */
+.indicadores {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 5px;
+}
+
+.indicador {
+    width: 10px;
+    height: 10px;
+    background-color: rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.indicador.ativo {
+    background-color: white;
+}
+/*
+carrossel fim
+*/
+
+/*
+faixa categoria ----------------------------------------
+*/
+
+.categorias {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+  }
+  
+  /* Container do título */
+  .titulo-container {
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  
+  .titulo-container h2 {
+    font-size: 2rem;
+    margin: 0;
+  }
+  
+  /* Container dos quadrados */
+  .quadrados-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px; /* Espaçamento igual entre os quadrados */
+    flex-wrap: wrap; /* Permite que os itens se ajustem na próxima linha quando necessário */
+    margin: 0 auto; /* Centraliza o container */
+  }
+  
+  /* Estilo dos quadrados */
+  .quadrado {
+    padding: 20px;
+    text-align: center;
+    width: calc(100% / 9 - 20px); /* 9 quadrados em uma linha */
+    box-sizing: border-box;
+    border-radius: 10px;
+  }
+  .quadrado:hover {
+    background-color: #D1B8A1;
+    transform: scale(1.1);
+  }
+  
+  .quadrado .imagem-svg {
+    width: 50px; /* Tamanho da imagem SVG */
+    height: 50px;
+    margin-bottom: 10px; /* Espaçamento entre a imagem e o texto */
+  }
+  
+  .quadrado p {
+    margin-top: 10px;
+    font-size: 1rem;
+  }
+  
+  /* Media Query para orientação Retrato (quando a altura é maior que a largura) */
+  @media (orientation: portrait) {
+    .quadrado {
+      width: calc(33.33% - 20px); /* 3 quadrados por linha no modo retrato */
+    }
+  }
+  
+ 
+
+  
+/*
+fim faixa categoria -----------------------------------
+*/
+
+#primeira {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background: black;
+    align-items: center;
+    justify-content: center;
+    background-image: url('https://s3.1app.com.br/master/project_5945/5eEsy3Ca9FXh06oK7e7qvnzT71DkOdL1.jpg');
+    background-size: contain;
+    border: 2px solid magenta; /* Borda magenta */
+}
+
+.caixa {
+    display: flex;
+    flex-wrap: wrap;
+    width: 170vh;
+    margin: 2vw 2vw 2vw;
+    background-image: linear-gradient(to bottom, rgba(0, 179, 255, 0.2), rgba(0, 0, 255, 0));
+    backdrop-filter: saturate(0%) blur(6px);
+    border: 2px solid gray; /* Borda cinza */
+}
+
+.botao-add-carrinho {
+    border: none;
+    color: rgb(0, 0, 0);
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin-top: 8%;
+    cursor: pointer;
+    border-radius: 5px;
+    z-index: 5;
+    background: linear-gradient(30deg, #06b600 5%, #1fff6a 66%, #cbffdb);
+    background-size: 100% 100%;
+    border: 2px solid red; /* Borda vermelha */
+}
+
+.botao-add-carrinho:hover {
+    transform: scale(1.05);
+}
+
+.produto {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid rgb(0, 255, 208); /* Borda aqua */
+    color: white;
+    width: 19%;
+    height: 24vw;
+    margin: 0.5%;
+    border-radius: 10px;
+    background-image: linear-gradient(to bottom, rgba(33, 182, 246, 0.3), rgba(0, 0, 255, 0));
+}
+
+.imagem {
+    display: flex;
+    justify-content: center;
+    min-height: 60%;
+    min-width: 100%;
+}
+
+.imagem img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px 10px 0 0;
+    border: 2px solid rgb(255, 238, 0); /* Borda amarela */
+}
+
+.informacoes {
+    padding: 10px;
+}
+
+#esquerdaPrimeira {
+    display: flex;
+    border: 2px solid red; /* Borda vermelha */
+    margin: 0px;
+    min-height: 100vh;
+    min-width: 50%;
+    align-items: center;
+    justify-content: center;
+}
+
+#caixavidro {
+    display: flex;
+    flex-direction: column;
+    font-size: 4.7vh;
+    width: 80%;
+    height: 90%;
+    border-radius: 30px;
+    align-items: center;
+    justify-content: space-around;
+    padding: 2vh 1vw 3vh;
+    backdrop-filter: saturate(100%) blur(30px);
+    border: 2px solid teal; /* Borda azul-verde */
+}
+
+#direitaPrimeira {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border: 2px solid rgb(55, 0, 255); /* Borda roxa */
+    margin: 0px;
+    min-height: 100vh;
+    min-width: 50%;
+}
+
+@media screen and (orientation: portrait) {
+    #primeira {
+        height: 150vh;
+    }
+
+    .caixa {
+        flex-direction: column;
+    }
+
+    #caixavidro {
+        width: 96%;
+    }
+
+    #direitaPrimeira {
+        min-height: 50vh;
+    }
+}
+
+#paginacao {
+    display: flex;
+    justify-content: center;
+}
