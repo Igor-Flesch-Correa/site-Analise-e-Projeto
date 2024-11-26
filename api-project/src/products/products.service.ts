@@ -8,31 +8,29 @@ export class ProductsService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createProductDto: CreateProductDto) {
+    // Validação manual
+    if (!createProductDto.name || createProductDto.name.trim() === '') {
+      throw new HttpException('Name cannot be empty', HttpStatus.BAD_REQUEST);
+    }
+
     try {
-      const result = await this.prismaService.product.create({
+      return await this.prismaService.product.create({
         data: createProductDto
       });
-      return result;
     } catch (error) {
-      // Loga o erro completo no console para debug
-      console.error('Error creating product:', error);
-
       if (error.code === 'P2002') {
-        // P2002: Chave única violada (por exemplo, nome duplicado)
+        // Prisma: Violação de restrição única
         throw new HttpException(
-          'A product with this unique field already exists.',
+          'Product with the same name already exists',
           HttpStatus.CONFLICT
         );
       }
-
-      // Lança uma exceção genérica para outros casos
       throw new HttpException(
-        'Error creating product',
+        'Failed to create product',
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
   }
-
   async findAll(page: number, limit: number, category?: string) {
     const offset = (page - 1) * limit; // Calcula o deslocamento para a paginação
 
@@ -67,26 +65,41 @@ export class ProductsService {
     return product;
   }
 
-  update(id: number, updateProductDto: UpdateProductDto) {
-    const result = this.prismaService.product.update({
-      where: { id: id },
-      data: updateProductDto
-    });
-    return result;
+  async update(id: number, updateProductDto: UpdateProductDto) {
+    if (!updateProductDto.name || updateProductDto.name.trim() === '') {
+      throw new HttpException('Name cannot be empty', HttpStatus.BAD_REQUEST);
+    }
+
+    try {
+      return await this.prismaService.product.update({
+        where: { id },
+        data: updateProductDto
+      });
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(
+        'Failed to update product',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
+    }
   }
 
   async remove(id: number) {
     try {
-      const result = await this.prismaService.product.delete({
-        where: { id: id }
+      return await this.prismaService.product.delete({
+        where: { id }
       });
-      return result;
     } catch (error) {
-      // Loga o erro completo no console para debug
-      console.error('Error deleting product:', error);
-
-      // Lança uma exceção genérica para todos os casos
-      throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+      if (error.code === 'P2025') {
+        // Erro do Prisma: Registro não encontrado
+        throw new HttpException('Product not found', HttpStatus.NOT_FOUND);
+      }
+      throw new HttpException(
+        'Failed to delete product',
+        HttpStatus.INTERNAL_SERVER_ERROR
+      );
     }
   }
 }

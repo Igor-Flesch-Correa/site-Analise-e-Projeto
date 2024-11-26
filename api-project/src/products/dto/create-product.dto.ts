@@ -1,4 +1,4 @@
-import { IsString, IsNumber } from 'class-validator';
+import { IsString, IsNumber, MinLength, Min, IsUrl } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateProductDto {
@@ -7,6 +7,7 @@ export class CreateProductDto {
     example: 'Product A'
   })
   @IsString()
+  @MinLength(1, { message: 'Name cannot be empty' })
   name: string;
 
   @ApiProperty({
@@ -14,6 +15,7 @@ export class CreateProductDto {
     example: 'This is a sample product description.'
   })
   @IsString()
+  @MinLength(1, { message: 'Description cannot be empty' })
   description: string;
 
   @ApiProperty({
@@ -21,6 +23,7 @@ export class CreateProductDto {
     example: 99.99
   })
   @IsNumber()
+  @Min(0.01, { message: 'Price must be greater than 0' })
   price: number;
 
   @ApiProperty({
@@ -28,6 +31,7 @@ export class CreateProductDto {
     example: 'http://example.com/product-a.jpg'
   })
   @IsString()
+  @IsUrl()
   imageUrl: string;
 
   @ApiProperty({
@@ -35,5 +39,6 @@ export class CreateProductDto {
     example: 'Electronics'
   })
   @IsString()
+  @MinLength(1, { message: 'Category cannot be empty' })
   category: string;
 }
