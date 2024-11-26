@@ -140,6 +140,7 @@
             sessionStorage.removeItem('user');
             verificarLogin();
         }
+        // fim funçoes de login-----------------------------------------------
         // carrossel de propagandas ---------------------------------------------------
 
         // Variáveis globais
@@ -195,16 +196,39 @@
         mostrarSlide(0);
 
 // Função para carregar produtos
-async function fetchProdutos(page = 1, limit = 10, category = '') {
+async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
     try {
         // Construindo a URL com os parâmetros
         const apiUrl = `https://casadossabores.yjwxjj.easypanel.host/products?page=${page}&limit=${limit}&category=${category}`;
+
+        //teste
+        console.log("Enviando requisição:");
+        console.log({
+            url: apiUrl,
+            method: 'GET',
+            
+            headers: {
+                'Accept': '*/*'
+            },
+        });
+
+        //fim teste
         
         // Fazendo a requisição à API
-        const response = await fetch(apiUrl);
+        const response = await fetch(apiUrl, {
+            method: 'GET', // Método HTTP
+            
+            headers: {
+                'Accept': '*/*', // Cabeçalho para aceitar qualquer tipo de resposta
+            },
+        });
         if (!response.ok) throw new Error(`Erro ao buscar produtos: ${response.statusText}`);
         
         const data = await response.json();
+
+        // Mostrar resposta JSON em um popup
+        alert("Resposta recebida com sucesso!");
+        alert(`Resposta JSON: ${JSON.stringify(data, null, 2)}`);
 
         // Renderizar produtos no container
         renderizarProdutos(data.data);
@@ -213,7 +237,7 @@ async function fetchProdutos(page = 1, limit = 10, category = '') {
         console.error(error);
 
         // Renderizar caixas de produtos vazios em caso de erro
-        renderizarProdutosVazios(5);
+        renderizarProdutosVazios(6);
         alert("Erro ao carregar os produtos. Exibindo placeholders.");
     }
 }
@@ -293,6 +317,7 @@ async function fetchProdutos(page = 1, limit = 10, category = '') {
         document.querySelectorAll('.botaoCategoria').forEach(botao => {
             botao.addEventListener('click', () => filtrarProdutos(botao.dataset.categoria));
         });
+        verificarLogin(); // chama função login ao carregar pag
     });
 </script>
 </body>
