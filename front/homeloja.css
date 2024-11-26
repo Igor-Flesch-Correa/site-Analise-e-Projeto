@@ -3,7 +3,6 @@
     margin: 0;
     box-sizing: border-box;
     font-family: "Roboto";
-    color: #4A2714;
     font-weight: 500;
 }
 
@@ -28,6 +27,11 @@
 }
 
 #lojaLink {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 3.8vh;
     height: 90%;
     border: 2px solid green; /* Borda verde */
 }
@@ -65,11 +69,15 @@
 }
 
 #caixaLogin {
-    color: #D1B8A1;
+    color: #D1B8A1 !important;
     display: flex;
     flex-direction: column;
     padding: 1%;
     border: 2px solid purple; /* Borda roxa */
+}
+#login-status {
+    color: #D1B8A1 !important;
+  
 }
 
 #bemVindo {
@@ -262,6 +270,7 @@ faixa categoria ----------------------------------------
     width: calc(100% / 9 - 20px); /* 9 quadrados em uma linha */
     box-sizing: border-box;
     border-radius: 10px;
+    color: #4A2714;
   }
   .quadrado:hover {
     background-color: #D1B8A1;
@@ -300,7 +309,7 @@ fim faixa categoria -----------------------------------
     background: black;
     align-items: center;
     justify-content: center;
-    background-image: url('https://s3.1app.com.br/master/project_5945/5eEsy3Ca9FXh06oK7e7qvnzT71DkOdL1.jpg');
+    background-color: #F5EDE1;
     background-size: contain;
     border: 2px solid magenta; /* Borda magenta */
 }
