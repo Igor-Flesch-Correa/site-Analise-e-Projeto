@@ -175,7 +175,7 @@ carrossel inicio
 }
 
 .slide:nth-child(1) {
-    background-color: #D1B8A1;
+    background-image: url('img/muie.jpg');
 }
 
 .slide:nth-child(2) {
@@ -183,7 +183,7 @@ carrossel inicio
 }
 
 .slide:nth-child(3) {
-    background-color:#F5EDE1;
+    background-color:#D1B8A1;
 }
 
 /* Botões de navegação */

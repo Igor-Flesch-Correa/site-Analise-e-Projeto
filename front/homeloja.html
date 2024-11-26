@@ -47,7 +47,7 @@
         <!-- Propagandas carrossel ----------------------------------------------->
         <section class="carrossel">
             <div class="slides" id="slides">
-                <div class="slide">Compra a porra do hamburger</div>
+                <div class="slide"></div>
                 <div class="slide"></div>
                 <div class="slide">teste</div>
             </div>
@@ -102,8 +102,8 @@
           
         <!-- Produtos ------------------------------------------------------------>
         <section id="primeira">
-            <div class="caixa" id="produtos"></div>
-            <div id="paginacao"></div>
+            <section class="caixa" id="produtos"></section>
+            <nav id="paginacao"></nav>
         </section>
     </main>
 
@@ -194,67 +194,106 @@
         // Inicializar
         mostrarSlide(0);
 
-        // Função para carregar produtos (simulação) --------------------------------------------------------------
-        async function fetchProdutos(query = '', modalidade = '', pagina = 1) {
-            // Simulando dados de uma API
-            const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/products');
-            const data = await response.json();
+// Função para carregar produtos
+async function fetchProdutos(page = 1, limit = 10, category = '') {
+    try {
+        // Construindo a URL com os parâmetros
+        const apiUrl = `https://casadossabores.yjwxjj.easypanel.host/products?page=${page}&limit=${limit}&category=${category}`;
+        
+        // Fazendo a requisição à API
+        const response = await fetch(apiUrl);
+        if (!response.ok) throw new Error(`Erro ao buscar produtos: ${response.statusText}`);
+        
+        const data = await response.json();
 
-            // Renderizar Produtos
-            const produtosContainer = document.getElementById('produtos');
-            produtosContainer.innerHTML = data.resultado.map(produto => `
-                <div class="produto" id="produto-${produto.idproduto}">
-                    <div class="imagem">
-                        <img src="${produto.imagem}" alt="${produto.dscproduto}" onerror="this.src='/img/logo.svg';">
-                    </div>
-                    <div class="informacoes">
-                        <h3>${produto.dscproduto}</h3>
-                        <p>Preço: R$ ${produto.preco.toFixed(2)}</p>
-                        <button onclick="addToCart(${produto.idproduto})">Add ao Carrinho +</button>
-                    </div>
+        // Renderizar produtos no container
+        renderizarProdutos(data.data);
+        configurarPaginacao(data.totalPages, parseInt(data.page));
+    } catch (error) {
+        console.error(error);
+
+        // Renderizar caixas de produtos vazios em caso de erro
+        renderizarProdutosVazios(5);
+        alert("Erro ao carregar os produtos. Exibindo placeholders.");
+    }
+}
+
+    // Função para renderizar produtos
+    function renderizarProdutos(produtos) {
+        const produtosContainer = document.getElementById('produtos');
+        produtosContainer.innerHTML = produtos.map(produto => `
+            <div class="produto" id="produto-${produto.id}">
+                <div class="imagem">
+                    <img src="${produto.imageUrl}" alt="${produto.name}" onerror="this.src='/img/logo.svg';">
                 </div>
-            `).join('');
+                <div class="informacoes">
+                    <h3>${produto.name}</h3>
+                    <p>${produto.description}</p>
+                    <p>Preço: R$ ${produto.price.toFixed(2)}</p>
+                    <button class="botao-add-carrinho" onclick="addToCart(${produto.id})">Add ao Carrinho +</button>
+                </div>
+            </div>
+        `).join('');
+    }
 
-            // Paginação
-            configurarPaginacao(data.totalPaginas, data.paginaAtual);
-        }
+    // Função para renderizar produtos vazios (placeholders)
+    function renderizarProdutosVazios(quantidade) {
+        const produtosContainer = document.getElementById('produtos');
+        produtosContainer.innerHTML = Array.from({ length: quantidade }).map((_, index) => `
+            <div class="produto vazio" id="placeholder-${index}">
+                <div class="imagem">
+                    <img src="/img/placeholder.svg" alt="Placeholder">
+                </div>
+                <div class="informacoes">
+                    <h3>Produto Indisponível</h3>
+                    <p>Descrição não disponível</p>
+                    <p>Preço: R$ 0,00</p>
+                    <button class="botao-add-carrinho">Add ao Carrinho +</button>
+                </div>
+            </div>
+        `).join('');
+    }
 
-        function configurarPaginacao(totalPaginas, paginaAtual) {
-            const paginacaoContainer = document.getElementById('paginacao');
-            paginacaoContainer.innerHTML = `
-                <button onclick="fetchProdutos('', '', 1)">&lt;&lt;</button>
-                <button onclick="fetchProdutos('', '', ${Math.max(1, paginaAtual - 1)})">&lt;</button>
-                ${Array.from({ length: totalPaginas }, (_, i) => `
-                    <button onclick="fetchProdutos('', '', ${i + 1})" ${i + 1 === paginaAtual ? 'disabled' : ''}>${i + 1}</button>
-                `).join('')}
-                <button onclick="fetchProdutos('', '', ${Math.min(totalPaginas, paginaAtual + 1)})">&gt;</button>
-                <button onclick="fetchProdutos('', '', ${totalPaginas})">&gt;&gt;</button>
-            `;
-        }
+    // Função para configurar paginação
+    function configurarPaginacao(totalPaginas, paginaAtual) {
+        const paginacaoContainer = document.getElementById('paginacao');
+        paginacaoContainer.innerHTML = `
+            <button onclick="fetchProdutos(1)">&lt;&lt;</button>
+            <button onclick="fetchProdutos(${Math.max(1, paginaAtual - 1)})">&lt;</button>
+            ${Array.from({ length: totalPaginas }, (_, i) => `
+                <button onclick="fetchProdutos(${i + 1})" ${i + 1 === paginaAtual ? 'disabled' : ''}>${i + 1}</button>
+            `).join('')}
+            <button onclick="fetchProdutos(${Math.min(totalPaginas, paginaAtual + 1)})">&gt;</button>
+            <button onclick="fetchProdutos(${totalPaginas})">&gt;&gt;</button>
+        `;
+    }
 
-        function addToCart(idProduto) {
-            alert(`Produto ${idProduto} adicionado ao carrinho!`);
-        }
+    // Função para adicionar ao carrinho
+    function addToCart(idProduto) {
+        alert(`Produto ${idProduto} adicionado ao carrinho!`);
+    }
 
-        function filtrarProdutos(modalidade) {
-            fetchProdutos('', modalidade);
-        }
+    // Função para filtrar produtos por categoria
+    function filtrarProdutos(categoria) {
+        fetchProdutos(1, 10, categoria);
+    }
 
-        function pesquisar() {
-            const query = document.getElementById('search').value;
-            fetchProdutos(query);
-        }
+    // Função para pesquisar produtos
+    function pesquisar() {
+        const query = document.getElementById('search').value;
+        fetchProdutos(1, 10, query);
+    }
 
-        function toggleMenu() {
-            const menu = document.getElementById('menu-retratil');
-            menu.style.display = menu.style.display === 'none' ? 'block' : 'none';
-        }
+    // Inicialização
+    document.addEventListener('DOMContentLoaded', () => {
+        fetchProdutos(); // Carregar produtos sem categoria inicialmente
 
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', () => {
-            verificarLogin();
-            fetchProdutos();
+
+        // Adicionar eventos para os botões de categoria
+        document.querySelectorAll('.botaoCategoria').forEach(botao => {
+            botao.addEventListener('click', () => filtrarProdutos(botao.dataset.categoria));
         });
-    </script>
+    });
+</script>
 </body>
 </html>
