@@ -43,6 +43,23 @@ describe('ProductsService', () => {
     expect(result).toHaveProperty('id');
   });
 
+  it('should throw error on update with invalid data', async () => {
+    const updateProductDto = { name: '' };
+    const productId = resultCreate.id;
+    await expect(service.update(productId, updateProductDto)).rejects.toThrow(HttpException);
+  });
+
+  it('should generate an error when creating equals', async () => {
+    const createProductDto = { 
+      name: resultCreate.name, 
+      description: resultCreate.description, 
+      price: resultCreate.price, 
+      imageUrl: resultCreate.imageUrl, 
+      category: resultCreate.category 
+    };
+    await expect(service.create(createProductDto)).rejects.toThrow(HttpException);
+  });
+
   it('should remove product', async () => {
     const result = await service.remove(resultCreate.id);
     expect(result).toHaveProperty('id');
@@ -64,8 +81,19 @@ describe('ProductsService', () => {
     await expect(service.findOne(nonExistentId)).rejects.toThrow(HttpException);
   });
 
-
   it('should throw an error when trying to delete a product with a non-existent id', async () => {
     await expect(service.remove(1)).rejects.toThrow(HttpException);
   });
+
+  it('should throw error on create with invalid data', async () => {
+    const createProductDto = {
+      name: '',
+      description: 'Delicioso e grande',
+      price: 10.99,
+      imageUrl: 'https://as2.ftcdn.net/v2/jpg/03/58/43/37/1000_F_358433703_UpOu6jBsp7F9ATErl4oza40kJDlw3JcO.jpg',
+      category: 'Lanche'
+    };
+    await expect(service.create(createProductDto)).rejects.toThrow(HttpException);
+  });
+  
 });
