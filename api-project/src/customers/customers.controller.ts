@@ -13,7 +13,7 @@ import {
 import { CustomersService } from './customers.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
 
 @ApiTags('Customers') // Agrupa as rotas sob a categoria "Customers" no Swagger
 @Controller('customers')
@@ -34,6 +34,11 @@ export class CustomersController {
   @ApiOperation({ summary: 'Authenticate a customer by CPF and password' })
   @ApiResponse({ status: 200, description: 'Authentication successful' })
   @ApiResponse({ status: 401, description: 'Invalid CPF or password' })
+  @ApiBody({
+    schema: {
+      properties: { cpfCnpj: { type: 'string' }, password: { type: 'string' } }
+    }
+  })
   async authenticate(@Body() body: { cpfCnpj: string; password: string }) {
     return await this.customersService.authenticate(
       body.cpfCnpj,
