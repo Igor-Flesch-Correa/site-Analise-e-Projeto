@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  NotFoundException
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderDto } from './dto/update-order.dto';
@@ -30,6 +35,18 @@ export class OrdersService {
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
+  }
+
+  async findByUserId(userId: number) {
+    const orders = await this.prismaService.order.findMany({
+      where: { customerId: userId }
+    });
+
+    if (orders.length === 0) {
+      throw new NotFoundException('No orders found for this user');
+    }
+
+    return orders;
   }
 
   async findAll(): Promise<any> {

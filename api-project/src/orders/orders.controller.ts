@@ -29,6 +29,14 @@ export class OrdersController {
     return await this.ordersService.create(createOrderDto);
   }
 
+  @Get('user/:userId')
+  @ApiOperation({ summary: 'Get orders by user ID' })
+  @ApiResponse({ status: 200, description: 'Orders retrieved successfully' })
+  @ApiResponse({ status: 404, description: 'No orders found for this user' })
+  async findByUserId(@Param('userId', ParseIntPipe) userId: number) {
+    return await this.ordersService.findByUserId(userId);
+  }
+
   @Get()
   @ApiOperation({ summary: 'Retrieve all orders' }) // Descrição do endpoint
   @ApiResponse({

@@ -29,6 +29,18 @@ export class CustomersController {
     return await this.customersService.create(createCustomerDto);
   }
 
+  @Post('auth')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Authenticate a customer by CPF and password' })
+  @ApiResponse({ status: 200, description: 'Authentication successful' })
+  @ApiResponse({ status: 401, description: 'Invalid CPF or password' })
+  async authenticate(@Body() body: { cpfCnpj: string; password: string }) {
+    return await this.customersService.authenticate(
+      body.cpfCnpj,
+      body.password
+    );
+  }
+
   @Get()
   @ApiOperation({ summary: 'Retrieve all customers' }) // Descrição do endpoint
   @ApiResponse({

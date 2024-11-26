@@ -1,4 +1,9 @@
-import { Injectable, HttpException, HttpStatus } from '@nestjs/common';
+import {
+  Injectable,
+  HttpException,
+  HttpStatus,
+  UnauthorizedException
+} from '@nestjs/common';
 import { PrismaService } from '../../prisma/prisma.service';
 import { CreateCustomerDto } from './dto/create-customer.dto';
 import { UpdateCustomerDto } from './dto/update-customer.dto';
@@ -27,6 +32,18 @@ export class CustomersService {
         HttpStatus.INTERNAL_SERVER_ERROR
       );
     }
+  }
+
+  async authenticate(cpfCnpj: string, password: string) {
+    const customer = await this.prismaService.customer.findUnique({
+      where: { cpfCnpj }
+    });
+
+    if (!customer || customer.password !== password) {
+      throw new UnauthorizedException('Invalid CPF or password');
+    }
+
+    return { id: customer.id };
   }
 
   async findAll() {
