@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { PrismaService } from 'prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class ProductsService {
@@ -41,7 +41,7 @@ export class ProductsService {
     const products = await this.prismaService.product.findMany({
       where,
       skip: offset,
-      take: +limit,
+      take: +limit
     });
 
     const totalCount = await this.prismaService.product.count({ where }); // Total de itens para paginação
@@ -51,7 +51,7 @@ export class ProductsService {
       total: totalCount,
       page,
       limit,
-      totalPages: Math.ceil(totalCount / limit),
+      totalPages: Math.ceil(totalCount / limit)
     };
   }
 
