@@ -68,20 +68,18 @@
     cursor: pointer;
 }
 
-#caixaLogin {
-    color: #D1B8A1 !important;
+
+#auth-status-container {
     display: flex;
-    flex-direction: column;
-    padding: 1%;
-    border: 2px solid purple; /* Borda roxa */
-}
-#login-status {
-    color: #D1B8A1 !important;
-  
+    align-items: center;
+    gap: 10px;
 }
 
-#bemVindo {
-    color: white;
+#auth-status {
+    padding: 2%;
+    font-weight: 500;
+    color: #ffffff; 
+    font-size: 1.4vw;
 }
 
 .botao {
@@ -410,3 +408,61 @@ fim faixa categoria -----------------------------------
     display: flex;
     justify-content: center;
 }
+
+/* login e cadastro -------------------------------------------------------- */
+
+#authForm {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f5ede1;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    z-index: 1000;
+}
+
+#authForm h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #4a2714;
+}
+
+#authForm input {
+    width: 100%;
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+#authForm button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4a2714;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#authForm button:hover {
+    background-color: #7a5b3e;
+}
+
+/* Estilo para o fundo escuro */
+#overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}
+
+/* fim login e cadastro -------------------------------------------------------- */
