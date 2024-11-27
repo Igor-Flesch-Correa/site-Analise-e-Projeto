@@ -58,7 +58,7 @@
             <div id="produtos-carrinho" class="caixa">
                 <!-- Produtos carregados dinamicamente  -->
             </div>
-            <div class="caixaPagamento">
+            <div id="caixaPagamento">
                 <div id="listagem">
                     <!-- Resumo dos produtos -->
                     <p id="carrinho-vazio">Seu carrinho está vazio.</p>
@@ -66,11 +66,13 @@
                 <div id="total">
                     <p><br> Total: R$ <span id="total-valor">0,00</span></p>
                 </div>
-                <a class="botoesPagamento" id="botaoPagar" href="#">Pagar</a>
+                <a class="botoesPagamento" id="botaoPagar" href="#" >Pagar</a>
                 <a href="homeloja.html" class="botoesPagamento" id="botaoContinuarComprando">Continuar comprando</a>
                 <a href="#" class="botoesPagamento" id="botaoLimparCarrinho" onclick="limparCarrinho()">Limpar carrinho</a>
             </div>
         </section>
+        
+
     </main>
 
     <script>
@@ -290,6 +292,7 @@
             const total = produtosCarrinho.reduce((acc, produto) => acc + (produto.price * produto.quantidade), 0);
             document.getElementById('total-valor').textContent = total.toFixed(2).replace('.', ',');
         }
+
 
         // Inicialização
         document.addEventListener('DOMContentLoaded', () => {
