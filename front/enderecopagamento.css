@@ -1,0 +1,168 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto";
+    font-weight: 700;
+    
+}
+/*---------------------------------------------------------------------------------------------*/
+
+#cabeca {
+    display: flex;
+    justify-content: space-between;
+    height: 9vh;
+    background-color: #4A2714;
+    background-size: cover;
+    position: relative;
+    align-items: center;
+    
+}
+
+#lojaLink {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 3.8vh;
+    height: 90%;
+    
+}
+
+#logoacabeca {
+    height: 100%;
+   
+}
+
+#alinhadireita {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 70%;
+  
+}
+
+#caixa-pesquisa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6%;
+    border-radius: 1vh;
+    min-height: 35%;
+    background: linear-gradient(200deg, #4A2714 5%, #D1B8A1 66%, #fff);
+    box-shadow: 0px 0px 100px 3px #D1B8A1;
+    
+}
+
+#lupa {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+
+#auth-status-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#auth-status {
+    padding: 2%;
+    font-weight: 500;
+    color: #ffffff; 
+    font-size: 1.4vw;
+}
+
+.botao {
+    color: white;
+    background: linear-gradient(30deg, #6A994E 5%, #D1B8A1 66%, #fff);
+    background-size: 100% 100%;
+    border: 2px solid orange; /* Borda laranja */
+}
+
+.botao:hover {
+    transform: scale(1.1);
+}
+
+#carrinhoLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3.5vw;
+    margin: 1vw;
+}
+
+#imagemcarrinho {
+    height: 85%;
+    border-radius: 1vh;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#imagemcarrinho:hover {
+    transform: scale(1.1);
+}
+
+/*faixa etapas ------------------------------------- */
+#faixaetapas{
+    
+
+    background-color: #F5EDE1;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+   
+}
+#caixaetapas{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    
+   
+}
+
+/* Estilo das etapas */
+.step {
+    display: flex;
+    align-items: center;
+    position: relative;
+    
+}
+
+/* Círculos */
+.circle {
+    width: 8vh;
+    height: 8vh;
+    border-radius: 50%;
+    background-color: #F5EDE1;
+    border: 3px solid #4A2714;
+    color: #4A2714;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3vh;
+    text-align: center;
+    z-index: 1;
+   
+}
+
+/* Linha entre os círculos */
+.line {
+    width: 10vw;
+    height: 0.4vh;
+    background-color: #4A2714;
+}
+
+/* Círculo ativo */
+.step.active .circle {
+    background-color: #4A2714;
+    color: #F5EDE1;
+    border-color: #4A2714;
+}

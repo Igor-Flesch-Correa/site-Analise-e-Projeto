@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paghtml</title>
-    <link rel="stylesheet" href="carrinho.css">
+    <link rel="stylesheet" href="enderecopagamento.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -43,37 +43,36 @@
                     <div class="circle">Carrinho</div>
                     <div class="line"></div>
                 </div>
-                <div class="step">
+                <div class="step active">
                     <div class="circle">Endereço</div>
                     <div class="line"></div>
                 </div>
-                <div class="step">
+                <div class="step active">
                     <div class="circle">Pagamento</div>
                 </div>
             </div>
         </section>
+        <!-- HTML para seleção do método de pagamento -->
+    <div id="payment-method">
+        <label for="paymentMethod">Escolha o método de pagamento:</label>
+        <select id="paymentMethod">
+            <option value="pix">PIX</option>
+            <option value="boleto">Boleto</option>
+            <option value="credit_card">Cartão de Crédito</option>
+        </select>
+    </div>
 
-        <!-- Carrinho ------------------------------------------------------>
-        <section id="primeira">
-            <div id="produtos-carrinho" class="caixa">
-                <!-- Produtos carregados dinamicamente  -->
-            </div>
-            <div id="caixaPagamento">
-                <div id="listagem">
-                    <!-- Resumo dos produtos -->
-                    <p id="carrinho-vazio">Seu carrinho está vazio.</p>
-                </div>
-                <div id="total">
-                    <p><br> Total: R$ <span id="total-valor">0,00</span></p>
-                </div>
-                <a class="botoesPagamento" id="botaoPagar" href="endereço.html" >Pagar</a>
-                <a href="homeloja.html" class="botoesPagamento" id="botaoContinuarComprando">Continuar comprando</a>
-                <a href="#" class="botoesPagamento" id="botaoLimparCarrinho" onclick="limparCarrinho()">Limpar carrinho</a>
-            </div>
-        </section>
-        
+    <!-- Exibição do total do carrinho -->
+    <div id="totalPrice">
+        Total: R$ <span id="total-price-value">0,00</span>
+    </div>
+
+    <!-- Botão para confirmar o pedido -->
+    <button id="confirm-order" onclick="confirmarPedido()">Confirmar Pedido</button>
+
 
     </main>
+
 
     <script>
 
@@ -204,101 +203,70 @@
 
         // fim funçoes de login---------------------------------------------------------------------------------
 
-         // Função para carregar os produtos do carrinho
-        function carregarCarrinho() {
-            const produtosCarrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const container = document.getElementById('produtos-carrinho');
-            const resumo = document.getElementById('listagem');
-            const carrinhoVazio = document.getElementById('carrinho-vazio');
-            container.innerHTML = '';
-            resumo.innerHTML = '';
+        //função finalização historico pagamento
 
-            if (carrinhoVazio) {
-                if (produtosCarrinho.length === 0) {
-                    carrinhoVazio.style.display = 'block';
-                    atualizarTotal();
-                    return;
-                } else {
-                    carrinhoVazio.style.display = 'none';
-                }
-            }
+         // Função para calcular o total do carrinho
+    function calcularTotalCarrinho() {
+        // Aqui você vai somar os itens do carrinho
+        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
+        let total = 0;
 
-            produtosCarrinho.forEach(produto => {
-                const produtoDiv = document.createElement('div');
-                produtoDiv.className = 'produto';
-                produtoDiv.innerHTML = `
-                    <div class="imagem">
-                        <img src="${produto.imageUrl}" alt="${produto.name}" onerror="this.src='/img/logo.svg';">
-                    </div>
-                    <div class="informacoes">
-                        <h3>${produto.name}</h3>
-                        <p>Preço: R$ ${produto.price.toFixed(2)}</p>
-                        <div id="caixaquantidade">
-                            <button type="button" class="maismenos" onclick="alterarQuantidade(${produto.id}, -1)">-</button>
-                            <input type="number" id="quantidade-${produto.id}" value="${produto.quantidade}" readonly>
-                            <button type="button" class="maismenos" onclick="alterarQuantidade(${produto.id}, 1)">+</button>
-                        </div>
-                        <button type="button" class="remover-produto" onclick="removerProduto(${produto.id})">Remover</button>
-                    </div>
-                `;
-                container.appendChild(produtoDiv);
+        carrinho.forEach(item => {
+            total += item.quantity * item.unitPrice;
+        });
 
-                const resumoProduto = document.createElement('p');
-                resumoProduto.textContent = `${produto.name} x ${produto.quantidade} - Preço Unitário: R$ ${produto.price.toFixed(2)}`;
-                resumo.appendChild(resumoProduto);
+        document.getElementById('total-price-value').innerText = total.toFixed(2);
+        return total;
+    }
+
+    // Função para confirmar o pedido
+    async function confirmarPedido() {
+        const userId = JSON.parse(localStorage.getItem('user')).id;  // Pega o id do usuário logado
+        const totalPrice = calcularTotalCarrinho();
+        const paymentMethod = document.getElementById('paymentMethod').value;
+        const items = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+        // Corpo da requisição
+        const orderData = {
+            status: 'OPEN',
+            customerId: userId,
+            totalPrice: totalPrice,
+            paymentMethod: paymentMethod,
+            items: items.map(item => ({
+                productId: item.productId,
+                quantity: item.quantity,
+                unitPrice: item.unitPrice
+            }))
+        };
+
+        try {
+            const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/orders', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(orderData)
             });
 
-            atualizarTotal();
-        }
-
-        // Função para alterar a quantidade de produtos
-        function alterarQuantidade(idProduto, quantidade) {
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const produto = carrinho.find(item => item.id === idProduto);
-
-            if (produto) {
-                produto.quantidade += quantidade;
-                if (produto.quantidade <= 0) {
-                    carrinho = carrinho.filter(item => item.id !== idProduto);
-                }
-                localStorage.setItem('carrinho', JSON.stringify(carrinho));
-                
-                carregarCarrinho();
-                
+            if (response.ok) {
+                const data = await response.json();
+                alert('Pedido confirmado com sucesso!');
+                console.log(data);
+                // Redirecionar ou atualizar a página conforme necessário
+            } else {
+                alert('Erro ao criar o pedido. Tente novamente mais tarde.');
             }
-            
+        } catch (error) {
+            console.error('Erro ao enviar pedido:', error);
+            alert('Erro ao enviar o pedido. Tente novamente mais tarde.');
         }
-
-        // Função para remover um produto do carrinho
-        function removerProduto(idProduto) {
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            carrinho = carrinho.filter(item => item.id !== idProduto);
-            localStorage.setItem('carrinho', JSON.stringify(carrinho));
-            carregarCarrinho();
-           
-        }
-
-        // Função para limpar o carrinho
-        function limparCarrinho() {
-            localStorage.removeItem('carrinho');
-            
-            carregarCarrinho();
-            
-        }
-
-        // Função para calcular o total do carrinho
-        function atualizarTotal() {
-            const produtosCarrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const total = produtosCarrinho.reduce((acc, produto) => acc + (produto.price * produto.quantidade), 0);
-            document.getElementById('total-valor').textContent = total.toFixed(2).replace('.', ',');
-        }
-
-
-        // Inicialização
+    }
+        
         document.addEventListener('DOMContentLoaded', () => {
-            carregarCarrinho();
-            atualizarStatusLogin();
-        });
-    </script>
+                
+                atualizarStatusLogin();
+                
+            });
+   </script>
 </body>
 </html>

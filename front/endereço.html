@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Paghtml</title>
-    <link rel="stylesheet" href="carrinho.css">
+    <link rel="stylesheet" href="enderecopagamento.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -43,7 +43,7 @@
                     <div class="circle">Carrinho</div>
                     <div class="line"></div>
                 </div>
-                <div class="step">
+                <div class="step active">
                     <div class="circle">Endereço</div>
                     <div class="line"></div>
                 </div>
@@ -52,28 +52,16 @@
                 </div>
             </div>
         </section>
-
-        <!-- Carrinho ------------------------------------------------------>
-        <section id="primeira">
-            <div id="produtos-carrinho" class="caixa">
-                <!-- Produtos carregados dinamicamente  -->
+        <!-- Seção de endereços -->
+        <section id="enderecos">
+            <h2>Escolha um Endereço</h2>
+            <div id="lista-enderecos">
+                <!-- Aqui serão carregados os endereços -->
             </div>
-            <div id="caixaPagamento">
-                <div id="listagem">
-                    <!-- Resumo dos produtos -->
-                    <p id="carrinho-vazio">Seu carrinho está vazio.</p>
-                </div>
-                <div id="total">
-                    <p><br> Total: R$ <span id="total-valor">0,00</span></p>
-                </div>
-                <a class="botoesPagamento" id="botaoPagar" href="endereço.html" >Pagar</a>
-                <a href="homeloja.html" class="botoesPagamento" id="botaoContinuarComprando">Continuar comprando</a>
-                <a href="#" class="botoesPagamento" id="botaoLimparCarrinho" onclick="limparCarrinho()">Limpar carrinho</a>
-            </div>
+            <button id="confirmar-endereco" style="display: none;" onclick="confirmarEndereco()">Confirmar Endereço</button>
         </section>
-        
-
     </main>
+
 
     <script>
 
@@ -203,101 +191,74 @@
         }
 
         // fim funçoes de login---------------------------------------------------------------------------------
+        //funçoes endereços
 
-         // Função para carregar os produtos do carrinho
-        function carregarCarrinho() {
-            const produtosCarrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const container = document.getElementById('produtos-carrinho');
-            const resumo = document.getElementById('listagem');
-            const carrinhoVazio = document.getElementById('carrinho-vazio');
-            container.innerHTML = '';
-            resumo.innerHTML = '';
+        
+        // Função para carregar os endereços do usuário
+        async function carregarEnderecos() {
+            const user = JSON.parse(localStorage.getItem('user'));
 
-            if (carrinhoVazio) {
-                if (produtosCarrinho.length === 0) {
-                    carrinhoVazio.style.display = 'block';
-                    atualizarTotal();
-                    return;
-                } else {
-                    carrinhoVazio.style.display = 'none';
-                }
+            if (!user || !user.id) {
+                alert('Usuário não encontrado!');
+                return;
             }
 
-            produtosCarrinho.forEach(produto => {
-                const produtoDiv = document.createElement('div');
-                produtoDiv.className = 'produto';
-                produtoDiv.innerHTML = `
-                    <div class="imagem">
-                        <img src="${produto.imageUrl}" alt="${produto.name}" onerror="this.src='/img/logo.svg';">
-                    </div>
-                    <div class="informacoes">
-                        <h3>${produto.name}</h3>
-                        <p>Preço: R$ ${produto.price.toFixed(2)}</p>
-                        <div id="caixaquantidade">
-                            <button type="button" class="maismenos" onclick="alterarQuantidade(${produto.id}, -1)">-</button>
-                            <input type="number" id="quantidade-${produto.id}" value="${produto.quantidade}" readonly>
-                            <button type="button" class="maismenos" onclick="alterarQuantidade(${produto.id}, 1)">+</button>
-                        </div>
-                        <button type="button" class="remover-produto" onclick="removerProduto(${produto.id})">Remover</button>
-                    </div>
-                `;
-                container.appendChild(produtoDiv);
+            try {
+                // Fazendo a requisição GET para buscar os dados do usuário, incluindo os endereços
+                const response = await fetch(`https://casadossabores.yjwxjj.easypanel.host/customers/${user.id}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    exibirEnderecos(data.addresses); // Passa os endereços recebidos da API
+                } else {
+                    alert('Erro ao carregar os endereços.');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar endereços:', error);
+                alert('Erro ao carregar os endereços. Tente novamente mais tarde.');
+            }
+        }
 
-                const resumoProduto = document.createElement('p');
-                resumoProduto.textContent = `${produto.name} x ${produto.quantidade} - Preço Unitário: R$ ${produto.price.toFixed(2)}`;
-                resumo.appendChild(resumoProduto);
+        // Função para exibir os endereços carregados
+        function exibirEnderecos(enderecos) {
+            const listaEnderecos = document.getElementById('lista-enderecos');
+            listaEnderecos.innerHTML = ''; // Limpa a lista de endereços
+
+            enderecos.forEach((endereco, index) => {
+                const enderecoDiv = document.createElement('div');
+                enderecoDiv.classList.add('endereco-item');
+                enderecoDiv.innerHTML = `
+                    <input type="radio" name="endereco" id="endereco${index}" value="${index}">
+                    <label for="endereco${index}">
+                        ${endereco.address}, ${endereco.number} ${endereco.complement ? `- ${endereco.complement}` : ''}
+                    </label>
+                `;
+                listaEnderecos.appendChild(enderecoDiv);
             });
 
-            atualizarTotal();
+            // Exibe o botão de confirmação apenas após a seleção de um endereço
+            document.getElementById('confirmar-endereco').style.display = 'block';
         }
 
-        // Função para alterar a quantidade de produtos
-        function alterarQuantidade(idProduto, quantidade) {
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const produto = carrinho.find(item => item.id === idProduto);
+        // Função para confirmar o endereço selecionado
+        function confirmarEndereco() {
+            const selectedEndereco = document.querySelector('input[name="endereco"]:checked');
 
-            if (produto) {
-                produto.quantidade += quantidade;
-                if (produto.quantidade <= 0) {
-                    carrinho = carrinho.filter(item => item.id !== idProduto);
-                }
-                localStorage.setItem('carrinho', JSON.stringify(carrinho));
-                
-                carregarCarrinho();
-                
+            if (selectedEndereco) {
+                const index = selectedEndereco.value;
+                alert(`Endereço ${index + 1} selecionado com sucesso!`);
+                // Aqui você pode enviar o endereço selecionado para o próximo passo ou armazená-lo
+            } else {
+                alert('Por favor, selecione um endereço.');
             }
-            
-        }
 
-        // Função para remover um produto do carrinho
-        function removerProduto(idProduto) {
-            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            carrinho = carrinho.filter(item => item.id !== idProduto);
-            localStorage.setItem('carrinho', JSON.stringify(carrinho));
-            carregarCarrinho();
+             window.location.href = 'pagamento.html';//redirecionaa
+
+        }
+         // Inicialização
+         document.addEventListener('DOMContentLoaded', () => {
            
-        }
-
-        // Função para limpar o carrinho
-        function limparCarrinho() {
-            localStorage.removeItem('carrinho');
-            
-            carregarCarrinho();
-            
-        }
-
-        // Função para calcular o total do carrinho
-        function atualizarTotal() {
-            const produtosCarrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-            const total = produtosCarrinho.reduce((acc, produto) => acc + (produto.price * produto.quantidade), 0);
-            document.getElementById('total-valor').textContent = total.toFixed(2).replace('.', ',');
-        }
-
-
-        // Inicialização
-        document.addEventListener('DOMContentLoaded', () => {
-            carregarCarrinho();
             atualizarStatusLogin();
+            carregarEnderecos();
         });
     </script>
 </body>
