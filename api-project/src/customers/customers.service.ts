@@ -73,7 +73,8 @@ export class CustomersService {
 
   async findOne(id: number) {
     const customer = await this.prismaService.customer.findUnique({
-      where: { id }
+      where: { id },
+      include: { addresses: true }
     });
 
     if (!customer) {
