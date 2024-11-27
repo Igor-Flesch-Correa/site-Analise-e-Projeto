@@ -59,7 +59,9 @@ export class CustomersService {
 
   async findAll() {
     try {
-      return await this.prismaService.customer.findMany();
+      return await this.prismaService.customer.findMany({
+        include: { addresses: true }
+      });
     } catch (error) {
       console.error('Error fetching customers:', error);
       throw new HttpException(
