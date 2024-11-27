@@ -16,7 +16,7 @@
     background-size: cover;
     position: relative;
     align-items: center;
-    border: 2px solid blue; /* Borda azul */
+    
 }
 
 #lojaLink {
@@ -26,12 +26,12 @@
     font-weight: 700;
     font-size: 3.8vh;
     height: 90%;
-    border: 2px solid green; /* Borda verde */
+    
 }
 
 #logoacabeca {
     height: 100%;
-    border: 2px solid rgb(0, 9, 128); /* Borda verde */
+   
 }
 
 #alinhadireita {
@@ -39,7 +39,7 @@
     align-items: center;
     justify-content: flex-end;
     width: 70%;
-    border: 2px solid green; /* Borda verde */
+  
 }
 
 #caixa-pesquisa {
@@ -61,20 +61,18 @@
     cursor: pointer;
 }
 
-#caixaLogin {
-    color: #D1B8A1 !important;
+
+#auth-status-container {
     display: flex;
-    flex-direction: column;
-    padding: 1%;
-    border: 2px solid purple; /* Borda roxa */
-}
-#login-status {
-    color: #D1B8A1 !important;
-  
+    align-items: center;
+    gap: 10px;
 }
 
-#bemVindo {
-    color: white;
+#auth-status {
+    padding: 2%;
+    font-weight: 500;
+    color: #ffffff; 
+    font-size: 1.4vw;
 }
 
 .botao {
@@ -93,8 +91,7 @@
     justify-content: center;
     align-items: center;
     height: 3.5vw;
-    
-    border: 2px solid pink; /* Borda rosa */
+    margin: 1vw;
 }
 
 #imagemcarrinho {
@@ -108,6 +105,7 @@
 #imagemcarrinho:hover {
     transform: scale(1.1);
 }
+
 /*faixa etapas ------------------------------------- */
 #faixaetapas{
     

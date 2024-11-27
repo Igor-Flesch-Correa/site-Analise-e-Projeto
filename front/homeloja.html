@@ -11,10 +11,10 @@
     <main>
         <!-- Cabeçalho -->
         <section id="cabeca">
-            <div href="/loja" id="lojaLink">
+            <a href="homeloja.html" id="lojaLink">
                 <img src="/img/logo.svg" alt="logo" id="logoacabeca">
                 Casa dos Sabores
-            </div>
+            </a>
             <div id="alinhadireita">
                 <div id="caixa-pesquisa">
                     <form id="formulario">
@@ -23,13 +23,14 @@
                         <button id="lupa" type="button" onclick="pesquisar()">&#128269;</button>
                     </form>
                 </div>
-                <!-- botão e texto login                 -->
-                <div id="auth-status-container">
-                    <span id="auth-status"></span> 
-                    <button onclick="abrirFormulario()">Login / Cadastro</button>
-                </div>                                                          <!-- as outras div de login estão no final do body-->
 
-                <a href="/carrinho" id="carrinhoLink">
+                <!-- botão e texto login                 -->
+                <div id="auth-status"></div>
+                <button id="auth-button" onclick="abrirFormulario()">Login / Cadastro</button>
+                <button id="logout-button" onclick="logout()" style="display: none;">Logout</button>
+                                                                    <!-- as outras div de login estão no final do body-->
+
+                <a href="carrinho.html" id="carrinhoLink">
                     <img id="imagemcarrinho" src="/img/carrinho.svg" alt="Carrinho">
                 </a>
     
@@ -105,7 +106,7 @@
             <input type="text" id="cpfLogin" placeholder="Digite seu CPF">
             <input type="password" id="senhaLogin" placeholder="Digite sua Senha">
             <button onclick="autenticarUsuario()">Entrar</button>
-
+    
             <h2>Cadastro</h2>
             <input type="text" id="nomeCadastro" placeholder="Nome Completo">
             <input type="email" id="emailCadastro" placeholder="E-mail">
@@ -117,7 +118,6 @@
             <input type="text" id="endereco2" placeholder="Endereço 2 (opcional)">
             <input type="text" id="numero2" placeholder="Número 2 (opcional)">
             <input type="text" id="complemento2" placeholder="Complemento 2 (opcional)">
-
             <button onclick="registrarUsuario()">Cadastrar</button>
         </div>
 
@@ -125,120 +125,134 @@
 
     <!-- Script -->
     <script>
-        // Funções de Autenticação usando sessionStorage---------------------------------
-         // Exibir o formulário flutuante
-         function abrirFormulario() {
-            document.getElementById('authForm').style.display = 'block';
-            document.getElementById('overlay').style.display = 'block';
+        // Funções de Autenticação usando localStorage---------------------------------
+
+// Exibir o formulário flutuante
+    function abrirFormulario() {
+        document.getElementById('authForm').style.display = 'block';
+        document.getElementById('overlay').style.display = 'block';
+    }
+
+    // Fechar o formulário flutuante
+    function fecharFormulario() {
+        document.getElementById('authForm').style.display = 'none';
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Atualizar o status de login com base no localStorage
+    function atualizarStatusLogin() {
+        const authStatus = document.getElementById('auth-status');
+        const authButton = document.getElementById('auth-button');
+        const logoutButton = document.getElementById('logout-button');
+        const user = JSON.parse(localStorage.getItem('user'));
+
+        if (user && user.name) {
+            authStatus.textContent = `Logado: ${user.name}`;
+            authButton.style.display = 'none';
+            logoutButton.style.display = 'inline-block';
+        } else {
+            authStatus.textContent = '';
+            authButton.style.display = 'inline-block';
+            logoutButton.style.display = 'none';
+        }
+    }
+
+    // Autenticar usuário
+    async function autenticarUsuario() {
+        const cpf = document.getElementById('cpfLogin').value;
+        const senha = document.getElementById('senhaLogin').value;
+
+        if (!cpf || !senha) {
+            alert('Por favor, preencha todos os campos de login.');
+            return;
         }
 
-        // Fechar o formulário flutuante
-        function fecharFormulario() {
-            document.getElementById('authForm').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
+        try {
+            const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/customers/auth', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ cpfCnpj: cpf, password: senha }),
+            });
 
-        function atualizarStatusLogin() { // gera o texto q indica se alguem logou
-            const authStatus = document.getElementById('auth-status');
-            const user = JSON.parse(sessionStorage.getItem('user'));
-
-            if (user && user.name) {
-                authStatus.textContent = `Logado: ${user.name}`;
+            if (response.ok) {
+                const data = await response.json();
+                localStorage.setItem('user', JSON.stringify({ id: data.id, name: cpf }));
+                console.log('Usuário autenticado com sucesso. ID do usuário:', data.id);
+                alert('Login realizado com sucesso!');
+                atualizarStatusLogin();
+                fecharFormulario();
             } else {
-                authStatus.textContent = ''; // Remove o texto se ninguém estiver logado
+                alert('Erro ao autenticar. Verifique as credenciais.');
             }
+        } catch (error) {
+            console.error('Erro ao autenticar:', error);
+            alert('Erro ao autenticar. Tente novamente mais tarde.');
+        }
+    }
+
+    // Função para registrar o usuário
+    async function registrarUsuario() {
+        const nome = document.getElementById('nomeCadastro').value;
+        const email = document.getElementById('emailCadastro').value;
+        const cpf = document.getElementById('cpfCadastro').value;
+        const senha = document.getElementById('senhaCadastro').value;
+
+        const endereco1 = document.getElementById('endereco1').value;
+        const numero1 = document.getElementById('numero1').value;
+        const complemento1 = document.getElementById('complemento1').value;
+
+        const endereco2 = document.getElementById('endereco2').value;
+        const numero2 = document.getElementById('numero2').value;
+        const complemento2 = document.getElementById('complemento2').value;
+
+        if (!nome || !email || !cpf || !senha || !endereco1 || !numero1 || !complemento1) {
+            alert('Por favor, preencha todos os campos obrigatórios de cadastro.');
+            return;
         }
 
-        // Função para autenticar o usuário
-        async function autenticarUsuario() {
-            const cpf = document.getElementById('cpfLogin').value;
-            const senha = document.getElementById('senhaLogin').value;
+        try {
+            const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/customers', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': '*/*'
+                },
+                body: JSON.stringify({
+                    name: nome,
+                    email: email,
+                    cpfCnpj: cpf,
+                    password: senha,
+                    addresses: [
+                        { address: endereco1, number: numero1, complement: complemento1 },
+                        { address: endereco2, number: numero2, complement: complemento2 }
+                    ]
+                })
+            });
 
-            if (!cpf || !senha) {
-                alert('Por favor, preencha todos os campos de login.');
-                return;
+            if (response.ok) {
+                alert('Cadastro realizado com sucesso! Faça o login.');
+                fecharFormulario();
+            } else {
+                alert('Erro ao cadastrar. Verifique os dados informados.');
             }
-
-            try {
-                const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/customers/auth', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': '*/*'
-                    },
-                    body: JSON.stringify({ cpfCnpj: cpf, password: senha })
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    const userName = cpf; // Exemplo: usa o CPF como nome. Altere conforme necessário.
-
-                    sessionStorage.setItem('user', JSON.stringify({ id: data.id, name: userName }));
-                    alert('Login realizado com sucesso!');
-                    atualizarStatusLogin(); // Atualiza o status de login
-                    fecharFormulario();
-                } else {
-                    alert('Erro ao autenticar. Verifique as credenciais.');
-                }
-            } catch (error) {
-                console.error('Erro ao autenticar:', error);
-                alert('Erro ao autenticar. Tente novamente mais tarde.');
-            }
+        } catch (error) {
+            console.error('Erro ao cadastrar:', error);
+            alert('Erro ao cadastrar. Tente novamente mais tarde.');
         }
+    }
+
+    // Logout do usuário
+    function logout() {
+        localStorage.removeItem('user');
+        alert('Você foi deslogado.');
+        atualizarStatusLogin();
+    }
+
+    // fim funçoes de login---------------------------------------------------------------------------------
 
 
-        // Função para registrar o usuário
-        async function registrarUsuario() {
-
-            const nome = document.getElementById('nomeCadastro').value;
-            const email = document.getElementById('emailCadastro').value;
-            const cpf = document.getElementById('cpfCadastro').value;
-            const senha = document.getElementById('senhaCadastro').value;
-
-            const endereco1 = document.getElementById('endereco1').value;
-            const numero1 = document.getElementById('numero1').value;
-            const complemento1 = document.getElementById('complemento1').value;
-
-            const endereco2 = document.getElementById('endereco2').value;
-            const numero2 = document.getElementById('numero2').value;
-            const complemento2 = document.getElementById('complemento2').value;
-
-            if (!nome || !email || !cpf || !senha || !endereco1 || !numero1 || !complemento1 ) {
-                alert('Por favor, preencha todos os campos obrigatórios de cadastro.');
-                return;
-            }
-
-            try {
-                const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/customers', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': '*/*'
-                    },
-                    body: JSON.stringify({
-                        name: nome,
-                        email: email,
-                        cpfCnpj: cpf,
-                        password: senha,
-                        addresses: [
-                            { address: endereco1, number: numero1, complement: complemento1 },
-                            { address: endereco2, number: numero2, complement: complemento2 }
-                        ]
-                    })
-                });
-
-                if (response.ok) {
-                    alert('Cadastro realizado com sucesso! Faça o login.');
-                    fecharFormulario();
-                } else {
-                    alert('Erro ao cadastrar. Verifique os dados informados.');
-                }
-            } catch (error) {
-                console.error('Erro ao cadastrar:', error);
-                alert('Erro ao cadastrar. Tente novamente mais tarde.');
-            }
-        }
-        // fim funçoes de login-----------------------------------------------
         // carrossel de propagandas ---------------------------------------------------
 
         // Variáveis globais
@@ -380,10 +394,11 @@ async function fetchProdutos(page = 1, limit = 10, category ='' ) {
     `;
 }
 
-    // Função para adicionar ao carrinho
+    // Função para adicionar ao carrinho -------------------------------------problema
+        
     async function addToCart(idProduto) {
         // Verifica se o usuário está logado
-        const user = JSON.parse(sessionStorage.getItem('user'));
+        const user = JSON.parse(localStorage.getItem('user'));
         if (!user || !user.id) {
             alert('Você precisa estar logado para adicionar produtos ao carrinho.');
             return; // Se não estiver logado, interrompe a função
@@ -398,8 +413,8 @@ async function fetchProdutos(page = 1, limit = 10, category ='' ) {
 
             const produto = await response.json();
 
-            // Obtém o carrinho atual do sessionStorage ou inicia vazio
-            let carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+            // Obtém o carrinho atual do localStorage ou inicia vazio
+            let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
 
             // Verifica se o produto já está no carrinho
             const produtoExistente = carrinho.find(item => item.id === idProduto);
@@ -415,8 +430,8 @@ async function fetchProdutos(page = 1, limit = 10, category ='' ) {
                 });
             }
 
-            // Salva o carrinho atualizado no sessionStorage
-            sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
+            // Salva o carrinho atualizado no localStorage
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
 
             alert(`Produto "${produto.name}" adicionado ao carrinho!`);
             mostrarCarrinho(); // Mostra o carrinho no log
@@ -426,18 +441,17 @@ async function fetchProdutos(page = 1, limit = 10, category ='' ) {
         }
     }
 
-
     function incrementarQuantidade(idProduto) {
-        let carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
         const produto = carrinho.find(item => item.id === idProduto);
         if (produto) {
             produto.quantidade += 1;
-            sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
         }
     }
 
     function decrementarQuantidade(idProduto) {
-        let carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
         const produto = carrinho.find(item => item.id === idProduto);
         if (produto) {
             produto.quantidade -= 1;
@@ -445,14 +459,15 @@ async function fetchProdutos(page = 1, limit = 10, category ='' ) {
                 // Remove o produto se a quantidade for 0
                 carrinho = carrinho.filter(item => item.id !== idProduto);
             }
-            sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
+            localStorage.setItem('carrinho', JSON.stringify(carrinho));
         }
     }
 
     function mostrarCarrinho() {
-        const carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+        const carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
         console.log('Carrinho de Compras:', carrinho);
     }
+
     //fim funçoes carrinho de compras
 
     // Função para filtrar produtos por categoria
@@ -478,8 +493,6 @@ async function fetchProdutos(page = 1, limit = 10, category ='' ) {
         });
 
         fetchProdutos(); // Carregar produtos sem categoria 
-
-        verificarLogin(); // chama função login ao carregar pag
 
         atualizarStatusLogin(); // Atualiza o status de login
     });

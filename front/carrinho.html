@@ -10,7 +10,7 @@
 <body>
     <main>
         <section id="cabeca">
-            <div href="/loja" id="lojaLink">
+            <div href="/homeloja.html" id="lojaLink">
                 <img src="/img/logo.svg" alt="logo" id="logoacabeca">
                 Casa dos Sabores
             </div>
@@ -22,10 +22,12 @@
                         <button id="lupa" type="button" onclick="pesquisar()">&#128269;</button>
                     </form>
                 </div>
-                <div id="caixaLogin">
-                    <div id="login-status"></div>
+                <!-- Botão e texto de login -->
+                <div id="auth-status-container">
+                    <span id="auth-status"></span> 
+                    <button onclick="abrirFormulario()">Login / Cadastro</button>
                 </div>
-                <a href="/carrinho" id="carrinhoLink">
+                <a href="carrinho.html" id="carrinhoLink">
                     <img id="imagemcarrinho" src="/img/carrinho.svg" alt="Carrinho">
                 </a>
             </div>
@@ -33,7 +35,6 @@
 
         <section id="faixaetapas">
             <div id="caixaetapas">
-            
                 <div class="step active">
                     <div class="circle">Carrinho</div>
                     <div class="line"></div>
@@ -48,127 +49,126 @@
             </div>
         </section>
 
+        <!-- Carrinho -->
         <section id="primeira">
-            <div class="caixa">
-                <div class="produtos" id="produto-1">
-                    <div class="imagem">
-                        <img src="img/produto1.jpg" alt="Produto 1">
-                    </div>
-                    <div class="informacoes">
-                        <h3>Produto 1</h3>
-                        <p>Preço: R$ 50,00</p>
-                        <div id="caixaquantidade">
-                            <form id="formulario">
-                                <input type="hidden" name="idproduto" value="1">
-                                <input type="number" name="quantidade" id="quantidadeAtual" value="1">
-                                <button type="button" class="maismenos" id="menos">-</button>
-                                <button type="button" class="maismenos" id="mais">+</button>
-                            </form>
-                        </div>
-                    </div>
-                    <div id="remover">
-                        <form id="formulario">
-                            <button type="button" class="removerProduto" id="remover">Remover do Carrinho</button>
-                        </form>
-                    </div>
-                </div>
-                <!-- Adicione mais produtos aqui -->
+            <div id="produtos-carrinho" class="caixa">
+                <!-- Produtos carregados dinamicamente irão aparecer aqui -->
             </div>
             <div class="caixaPagamento">
                 <div id="listagem">
-                    <p>Produto 1 x 1 Preço Unitário: R$ 50,00</p>
+                    <!-- Resumo dos produtos -->
+                    <p id="carrinho-vazio">Seu carrinho está vazio.</p>
                 </div>
                 <div id="total">
-                    <p><br> Total: R$ 50,00</p>
+                    <p><br> Total: R$ <span id="total-valor">0,00</span></p>
                 </div>
                 <a class="botoesPagamento" id="botaoPagar" href="#">Pagar</a>
                 <a href="index.html" class="botoesPagamento" id="botaoContinuarComprando">Continuar comprando</a>
-                <a href="#" class="botoesPagamento" id="botaoLimparCarrinho">Limpar carrinho</a>
+                <a href="#" class="botoesPagamento" id="botaoLimparCarrinho" onclick="limparCarrinho()">Limpar carrinho</a>
             </div>
         </section>
     </main>
+
     <script>
-       document.addEventListener('DOMContentLoaded', () => {
-    const maisBotoes = document.querySelectorAll('#mais');
-    const menosBotoes = document.querySelectorAll('#menos');
-    const removerBotoes = document.querySelectorAll('.removerProduto');
+        // Função para carregar os produtos do carrinho
+        function carregarCarrinho() {
+            const produtosCarrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+            const container = document.getElementById('produtos-carrinho');
+            const resumo = document.getElementById('listagem');
+            const carrinhoVazio = document.getElementById('carrinho-vazio');
+            container.innerHTML = '';
+            resumo.innerHTML = '';
 
-    maisBotoes.forEach(button => {
-        button.addEventListener('click', () => {
-            const input = button.previousElementSibling;
-            input.value = parseInt(input.value) + 1;
-            atualizarTotal();
-        });
-    });
-
-    menosBotoes.forEach(button => {
-        button.addEventListener('click', () => {
-            const input = button.nextElementSibling;
-            if (parseInt(input.value) > 1) {
-                input.value = parseInt(input.value) - 1;
+            if (produtosCarrinho.length === 0) {
+                carrinhoVazio.style.display = 'block';
                 atualizarTotal();
-            }
-        });
-    });
-
-    removerBotoes.forEach(button => {
-        button.addEventListener('click', () => {
-            const produto = button.closest('.produto');
-            produto.remove();
-            atualizarTotal();
-        });
-    });
-
-    function atualizarTotal() {
-        const produtos = document.querySelectorAll('.produto');
-        let total = 0;
-
-        produtos.forEach(produto => {
-            const quantidade = produto.querySelector('#quantidadeAtual').value;
-            const precoTexto = produto.querySelector('.informacoes p').textContent;
-            const preco = parseFloat(precoTexto.replace('Preço: R$ ', '').replace(',', '.'));
-            total += quantidade * preco;
-        });
-
-        document.querySelector('#total p').textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
-    }
-
-    //funçoes que precisa da homeloja
-      // Funções de Autenticação usando sessionStorage---------------------------------
-      function verificarLogin() {
-            const loginStatus = document.getElementById('login-status');
-            const user = sessionStorage.getItem('user');
-
-            if (user) {
-                const userData = JSON.parse(user);
-                loginStatus.innerHTML = `
-                    <p>Bem vindo, ${userData.name}</p>
-                    <button onclick="logout()">Logout</button>
-                `;
+                return;
             } else {
-                loginStatus.innerHTML = `
-                    <button onclick="exibirLoginForm()">Login</button>
+                carrinhoVazio.style.display = 'none';
+            }
+
+            produtosCarrinho.forEach(produto => {
+                const produtoDiv = document.createElement('div');
+                produtoDiv.className = 'produto';
+                produtoDiv.innerHTML = `
+                    <div class="imagem">
+                        <img src="${produto.imageUrl}" alt="${produto.name}" onerror="this.src='/img/logo.svg';">
+                    </div>
+                    <div class="informacoes">
+                        <h3>${produto.name}</h3>
+                        <p>Preço: R$ ${produto.price.toFixed(2)}</p>
+                        <div id="caixaquantidade">
+                            <button type="button" class="maismenos" onclick="alterarQuantidade(${produto.id}, -1)">-</button>
+                            <input type="number" id="quantidade-${produto.id}" value="${produto.quantidade}" readonly>
+                            <button type="button" class="maismenos" onclick="alterarQuantidade(${produto.id}, 1)">+</button>
+                        </div>
+                        <button type="button" class="remover-produto" onclick="removerProduto(${produto.id})">Remover</button>
+                    </div>
                 `;
+                container.appendChild(produtoDiv);
+
+                // Atualizar resumo
+                const resumoProduto = document.createElement('p');
+                resumoProduto.textContent = `${produto.name} x ${produto.quantidade} - Preço Unitário: R$ ${produto.price.toFixed(2)}`;
+                resumo.appendChild(resumoProduto);
+            });
+
+            atualizarTotal();
+        }
+
+        // Função para alterar a quantidade de produtos
+        function alterarQuantidade(idProduto, quantidade) {
+            let carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+            const produto = carrinho.find(item => item.id === idProduto);
+
+            if (produto) {
+                produto.quantidade += quantidade;
+                if (produto.quantidade <= 0) {
+                    carrinho = carrinho.filter(item => item.id !== idProduto);
+                }
+                sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
+                carregarCarrinho();
             }
         }
 
-        function exibirLoginForm() {
-            const username = prompt("Digite seu nome para login:", "Usuário");
-            if (username) {
-                const userData = { name: username };
-                sessionStorage.setItem('user', JSON.stringify(userData));
-                verificarLogin();
+        // Função para remover um produto do carrinho
+        function removerProduto(idProduto) {
+            let carrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+            carrinho = carrinho.filter(item => item.id !== idProduto);
+            sessionStorage.setItem('carrinho', JSON.stringify(carrinho));
+            carregarCarrinho();
+        }
+
+        // Função para limpar o carrinho
+        function limparCarrinho() {
+            sessionStorage.removeItem('carrinho');
+            carregarCarrinho();
+        }
+
+        // Função para calcular o total do carrinho
+        function atualizarTotal() {
+            const produtosCarrinho = JSON.parse(sessionStorage.getItem('carrinho')) || [];
+            const total = produtosCarrinho.reduce((acc, produto) => acc + (produto.price * produto.quantidade), 0);
+            document.getElementById('total-valor').textContent = total.toFixed(2).replace('.', ',');
+        }
+
+        // Função para atualizar o status de login
+        function atualizarStatusLogin() {
+            const authStatusElement = document.getElementById('auth-status');
+            const userLoggedIn = sessionStorage.getItem('usuarioLogado'); // Exemplo de controle de login
+
+            if (userLoggedIn) {
+                authStatusElement.textContent = `Bem-vindo, ${userLoggedIn}!`;
+            } else {
+                authStatusElement.textContent = 'Você não está logado.';
             }
         }
 
-        function logout() {
-            sessionStorage.removeItem('user');
-            verificarLogin();
-        }
-
-    verificarLogin(); // chama função login ao carregar pag
-});
- 
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', () => {
+            carregarCarrinho();
+            atualizarStatusLogin();
+        });
     </script>
 </body>
 </html>
