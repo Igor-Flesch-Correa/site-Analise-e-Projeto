@@ -13,14 +13,25 @@ export class CustomersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async create(createCustomerDto: CreateCustomerDto) {
+    const { addresses, ...customerData } = createCustomerDto;
+
     try {
       return await this.prismaService.customer.create({
-        data: createCustomerDto
+        data: {
+          ...customerData,
+          addresses: {
+            create: addresses // Cria os endereços associados ao cliente
+          }
+        },
+        include: {
+          addresses: true // Inclui os endereços na resposta
+        }
       });
     } catch (error) {
       console.error('Error creating customer:', error);
 
       if (error.code === 'P2002') {
+        // Prisma: Violação de restrição única (e.g., CPF ou email duplicado)
         throw new HttpException(
           'Customer with this unique field already exists',
           HttpStatus.CONFLICT
@@ -71,15 +82,40 @@ export class CustomersService {
   }
 
   async update(id: number, updateCustomerDto: UpdateCustomerDto) {
+    const { addresses, ...customerData } = updateCustomerDto;
+
     try {
       return await this.prismaService.customer.update({
         where: { id },
-        data: updateCustomerDto
+        data: {
+          ...customerData,
+          addresses: addresses
+            ? {
+                upsert: addresses.map((address) => ({
+                  where: { id: address.id || 0 }, // Assume que cada endereço tem um ID
+                  update: {
+                    address: address.address,
+                    number: address.number,
+                    complement: address.complement
+                  },
+                  create: {
+                    address: address.address,
+                    number: address.number,
+                    complement: address.complement
+                  }
+                }))
+              }
+            : undefined
+        },
+        include: {
+          addresses: true // Inclui os endereços atualizados na resposta
+        }
       });
     } catch (error) {
       console.error('Error updating customer:', error);
 
       if (error.code === 'P2025') {
+        // Prisma: Registro não encontrado
         throw new HttpException('Customer not found', HttpStatus.NOT_FOUND);
       }
 

@@ -29,6 +29,7 @@ model Customer {
   name     String
   email    String
   orders   Order[]
+  addresses Address[]
 }
 
 model Order {
@@ -40,4 +41,13 @@ model Order {
   paymentMethod String
   createdAt    DateTime     @default(now())
   status       String
+}
+
+model Address {
+  id          Int      @id @default(autoincrement())
+  customerId  Int
+  customer    Customer @relation(fields: [customerId], references: [id])
+  address     String
+  number      String
+  complement  String?
 }
