@@ -166,3 +166,40 @@
     color: #F5EDE1;
     border-color: #4A2714;
 }
+
+#historico-pedidos {
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+#historico-pedidos h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+#lista-pedidos {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.pedido {
+    background-color: #fff;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.pedido h3 {
+    margin-top: 0;
+}
+
+.pedido .detalhes {
+    font-size: 14px;
+    color: #555;
+}
+
