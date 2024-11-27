@@ -1,0 +1,353 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: "Roboto";
+    font-weight: 700;
+    
+}
+/*---------------------------------------------------------------------------------------------*/
+.bloco{
+
+}
+#cabeca {
+    display: flex;
+    justify-content: space-between;
+    height: 9vh;
+    background-color: #4A2714;
+    background-size: cover;
+    position: relative;
+    align-items: center;
+    border: 2px solid blue; /* Borda azul */
+}
+
+#lojaLink {
+    display: flex;
+    align-items: center;
+    color: #fff;
+    font-weight: 700;
+    font-size: 3.8vh;
+    height: 90%;
+    border: 2px solid green; /* Borda verde */
+}
+
+#logoacabeca {
+    height: 100%;
+    border: 2px solid rgb(0, 9, 128); /* Borda verde */
+}
+
+#alinhadireita {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 70%;
+    border: 2px solid green; /* Borda verde */
+}
+
+#caixa-pesquisa {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.6%;
+    border-radius: 1vh;
+    min-height: 35%;
+    background: linear-gradient(200deg, #4A2714 5%, #D1B8A1 66%, #fff);
+    box-shadow: 0px 0px 100px 3px #D1B8A1;
+    
+}
+
+#lupa {
+    border: none;
+    background: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+#caixaLogin {
+    color: #D1B8A1 !important;
+    display: flex;
+    flex-direction: column;
+    padding: 1%;
+    border: 2px solid purple; /* Borda roxa */
+}
+#login-status {
+    color: #D1B8A1 !important;
+  
+}
+
+#bemVindo {
+    color: white;
+}
+
+.botao {
+    color: white;
+    background: linear-gradient(30deg, #6A994E 5%, #D1B8A1 66%, #fff);
+    background-size: 100% 100%;
+    border: 2px solid orange; /* Borda laranja */
+}
+
+.botao:hover {
+    transform: scale(1.1);
+}
+
+#carrinhoLink {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 3.5vw;
+    
+    border: 2px solid pink; /* Borda rosa */
+}
+
+#imagemcarrinho {
+    height: 85%;
+    border-radius: 1vh;
+    width: auto;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#imagemcarrinho:hover {
+    transform: scale(1.1);
+}
+/*faixa etapas ------------------------------------- */
+#faixaetapas{
+    
+
+    background-color: #F5EDE1;
+    height: 10vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    padding: 0 5%;
+   
+}
+#caixaetapas{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 5%;
+    
+    border: 2px solid rgb(31, 20, 197); /* Borda rosa */
+}
+
+/* Estilo das etapas */
+.step {
+    display: flex;
+    align-items: center;
+    position: relative;
+    
+}
+
+/* Círculos */
+.circle {
+    width: 8vh;
+    height: 8vh;
+    border-radius: 50%;
+    background-color: #F5EDE1;
+    border: 3px solid #4A2714;
+    color: #4A2714;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3vh;
+    text-align: center;
+    z-index: 1;
+   
+}
+
+/* Linha entre os círculos */
+.line {
+    width: 10vw;
+    height: 0.4vh;
+    background-color: #4A2714;
+}
+
+/* Círculo ativo */
+.step.active .circle {
+    background-color: #4A2714;
+    color: #F5EDE1;
+    border-color: #4A2714;
+}
+
+/*fim faixa etapas --------------------------------*/
+#primeira{
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    background-color: #D1B8A1;
+    background-size: contain;
+}
+
+.caixa{
+    display: flex;
+    flex-direction: column;
+    
+    width: 70%;
+    margin: 2vw 2vw 2vw;   
+}
+.caixaPagamento{
+    display: flex;
+    flex-direction: column;
+
+    color: white;
+    width: 30%;
+    height: 100vh;
+    
+    padding: 3%;
+    background-image: linear-gradient(to bottom, #4A2714, #D1B8A1); 
+    backdrop-filter: saturate(0%) blur(6px);
+    border-radius: 10px;
+    margin: 2vw 2vw 2vw; 
+}
+#listagem{
+    max-height: 300px; 
+    overflow-y: scroll;      
+}
+
+.botoesPagamento{
+    text-decoration: none;
+    text-align: center;
+    color: #4A2714;
+    font-size: 3vh;
+    padding: 1.6vh;
+    margin-top: 7%;
+    border:1px solid #D1B8A1;
+    border-radius: .6vh;
+
+    background: -webkit-gradient(linear, left top, right top, color-stop(5%, #6A994E), color-stop(56%, #85df51), to(#93cc71));
+    background: -o-linear-gradient(60deg, #6A994E 5%, #85df51 66%, #93cc71);
+
+    box-shadow: 0px 0px 50px 10px #fce0b6;
+
+
+    background: linear-gradient(30deg, #6A994E 5%, #85df51 66%, #93cc71);
+    background-size: 100% 100%;
+
+}
+#botaoPagar{
+    animation: pulse 1.5s infinite;
+    -webkit-animation: pulse 1.5s infinite;
+}
+@-webkit-keyframes pulse { 
+  0% {
+    -webkit-box-shadow: 0 0 0 0 #F5EDE1;
+  }
+  70% {
+      -webkit-box-shadow: 0 0 0 1.5vh rgba(61,149,214, 0);
+  }
+  100% {
+      -webkit-box-shadow: 0 0 0 0 rgba(61,149,214, 0);
+  }
+}
+@keyframes pulse {
+  0% {
+    -moz-box-shadow: 0 0 0 0 #F5EDE1;
+    box-shadow: 0 0 0 0 #F5EDE1;
+  }
+  70% {
+      -moz-box-shadow: 0 0 0 1.5vh rgba(61,149,214, 0);
+      box-shadow: 0 0 0 1.5vh rgba(61,149,214, 0);
+  }
+  100% {
+      -moz-box-shadow: 0 0 0 0 rgba(61,149,214, 0);
+      box-shadow: 0 0 0 0 rgba(61,149,214, 0);
+  }}
+
+
+.produtos{
+    display: flex;
+    align-items: center;
+    /*border:1px solid rgb(81, 255, 0);*/
+    height: 12vw; 
+    margin:0.5%;
+    border-radius: 10px;
+    
+
+    
+    background-image: linear-gradient(to right, rgba(255, 115, 0, 0.2), #4A2714); 
+    backdrop-filter: saturate(0%) blur(6px);
+
+}
+.imagem{
+    display: flex;
+    justify-content: center;
+    width: 40%;
+    height: 100%;
+ 
+}
+.imagem img {
+    max-width: 100%; 
+    height: auto;
+    border-radius: 10px 10px 0 0; 
+    border:1px solid #4A2714;
+}
+
+.informacoes {
+    color: white;
+    padding: 10px;
+}
+
+#caixaquantidade{
+    border:1px solid red;
+}
+#quantidadeAtual{
+    width: 40%;
+}
+.maismenos{
+    width: 6%;
+}
+
+
+
+#caixavidro{
+    display: flex;
+    flex-direction: column;
+    font-size: 4.7vh;
+    width: 80%;
+    height: 90%;
+    border-radius: 30px;
+    align-items: center;
+    justify-content:space-around;
+    padding: 2vh 1vw 3vh;
+    
+
+    backdrop-filter: saturate(100%) blur(30px);
+}
+#direitaPrimeira{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    border:1px solid rgb(55, 0, 255);
+    margin: 0px;
+    min-height: 100vh;
+    min-width: 50%;
+}
+
+
+        @media screen and (orientation: portrait)/*----------------------------------------------ajustes mobile-------------------------------------*/
+        {
+        #primeira{ /*height:200vh;*/height: 150vh;}
+
+        .caixa{flex-direction: column;}
+
+        #caixavidro{width: 96%;}
+
+        #direitaPrimeira{min-height: 50vh;}
+        
+        .botao{}
+
+
+        }
+
+/*------------------------------------------------------*/
+#paginacao{
+    display: flex;
+    justify-content: center;
+
+}
+
+
+/*---------------------------------------------------------------------------------------------*/

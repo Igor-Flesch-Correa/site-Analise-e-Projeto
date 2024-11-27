@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paghtml</title>
+    <link rel="stylesheet" href="carrinho.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <main>
+        <section id="cabeca">
+            <div href="/loja" id="lojaLink">
+                <img src="/img/logo.svg" alt="logo" id="logoacabeca">
+                Casa dos Sabores
+            </div>
+            <div id="alinhadireita">
+                <div id="caixa-pesquisa">
+                    <form id="formulario">
+                        <input type="hidden" name="modalidade" id="modalidade">
+                        <input type="text" name="dscproduto" id="search" placeholder="Pesquisar...">
+                        <button id="lupa" type="button" onclick="pesquisar()">&#128269;</button>
+                    </form>
+                </div>
+                <div id="caixaLogin">
+                    <div id="login-status"></div>
+                </div>
+                <a href="/carrinho" id="carrinhoLink">
+                    <img id="imagemcarrinho" src="/img/carrinho.svg" alt="Carrinho">
+                </a>
+            </div>
+        </section>
+
+        <section id="faixaetapas">
+            <div id="caixaetapas">
+            
+                <div class="step active">
+                    <div class="circle">Carrinho</div>
+                    <div class="line"></div>
+                </div>
+                <div class="step">
+                    <div class="circle">Endereço</div>
+                    <div class="line"></div>
+                </div>
+                <div class="step">
+                    <div class="circle">Pagamento</div>
+                </div>
+            </div>
+        </section>
+
+        <section id="primeira">
+            <div class="caixa">
+                <div class="produtos" id="produto-1">
+                    <div class="imagem">
+                        <img src="img/produto1.jpg" alt="Produto 1">
+                    </div>
+                    <div class="informacoes">
+                        <h3>Produto 1</h3>
+                        <p>Preço: R$ 50,00</p>
+                        <div id="caixaquantidade">
+                            <form id="formulario">
+                                <input type="hidden" name="idproduto" value="1">
+                                <input type="number" name="quantidade" id="quantidadeAtual" value="1">
+                                <button type="button" class="maismenos" id="menos">-</button>
+                                <button type="button" class="maismenos" id="mais">+</button>
+                            </form>
+                        </div>
+                    </div>
+                    <div id="remover">
+                        <form id="formulario">
+                            <button type="button" class="removerProduto" id="remover">Remover do Carrinho</button>
+                        </form>
+                    </div>
+                </div>
+                <!-- Adicione mais produtos aqui -->
+            </div>
+            <div class="caixaPagamento">
+                <div id="listagem">
+                    <p>Produto 1 x 1 Preço Unitário: R$ 50,00</p>
+                </div>
+                <div id="total">
+                    <p><br> Total: R$ 50,00</p>
+                </div>
+                <a class="botoesPagamento" id="botaoPagar" href="#">Pagar</a>
+                <a href="index.html" class="botoesPagamento" id="botaoContinuarComprando">Continuar comprando</a>
+                <a href="#" class="botoesPagamento" id="botaoLimparCarrinho">Limpar carrinho</a>
+            </div>
+        </section>
+    </main>
+    <script>
+       document.addEventListener('DOMContentLoaded', () => {
+    const maisBotoes = document.querySelectorAll('#mais');
+    const menosBotoes = document.querySelectorAll('#menos');
+    const removerBotoes = document.querySelectorAll('.removerProduto');
+
+    maisBotoes.forEach(button => {
+        button.addEventListener('click', () => {
+            const input = button.previousElementSibling;
+            input.value = parseInt(input.value) + 1;
+            atualizarTotal();
+        });
+    });
+
+    menosBotoes.forEach(button => {
+        button.addEventListener('click', () => {
+            const input = button.nextElementSibling;
+            if (parseInt(input.value) > 1) {
+                input.value = parseInt(input.value) - 1;
+                atualizarTotal();
+            }
+        });
+    });
+
+    removerBotoes.forEach(button => {
+        button.addEventListener('click', () => {
+            const produto = button.closest('.produto');
+            produto.remove();
+            atualizarTotal();
+        });
+    });
+
+    function atualizarTotal() {
+        const produtos = document.querySelectorAll('.produto');
+        let total = 0;
+
+        produtos.forEach(produto => {
+            const quantidade = produto.querySelector('#quantidadeAtual').value;
+            const precoTexto = produto.querySelector('.informacoes p').textContent;
+            const preco = parseFloat(precoTexto.replace('Preço: R$ ', '').replace(',', '.'));
+            total += quantidade * preco;
+        });
+
+        document.querySelector('#total p').textContent = `Total: R$ ${total.toFixed(2).replace('.', ',')}`;
+    }
+
+    //funçoes que precisa da homeloja
+      // Funções de Autenticação usando sessionStorage---------------------------------
+      function verificarLogin() {
+            const loginStatus = document.getElementById('login-status');
+            const user = sessionStorage.getItem('user');
+
+            if (user) {
+                const userData = JSON.parse(user);
+                loginStatus.innerHTML = `
+                    <p>Bem vindo, ${userData.name}</p>
+                    <button onclick="logout()">Logout</button>
+                `;
+            } else {
+                loginStatus.innerHTML = `
+                    <button onclick="exibirLoginForm()">Login</button>
+                `;
+            }
+        }
+
+        function exibirLoginForm() {
+            const username = prompt("Digite seu nome para login:", "Usuário");
+            if (username) {
+                const userData = { name: username };
+                sessionStorage.setItem('user', JSON.stringify(userData));
+                verificarLogin();
+            }
+        }
+
+        function logout() {
+            sessionStorage.removeItem('user');
+            verificarLogin();
+        }
+
+    verificarLogin(); // chama função login ao carregar pag
+});
+ 
+    </script>
+</body>
+</html>
