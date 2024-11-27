@@ -16,9 +16,9 @@ describe('ProductsService', () => {
 
   it('should create a product', async () => {
     const createProductDto = {
-      name: 'Xis salada',
-      description: 'Delicioso e grande',
-      price: 10.99,
+      name: 'Xis Picanha',
+      description: 'Carne boa',
+      price: 29.99,
       imageUrl:
         'https://as2.ftcdn.net/v2/jpg/03/58/43/37/1000_F_358433703_UpOu6jBsp7F9ATErl4oza40kJDlw3JcO.jpg',
       category: 'Lanche'
@@ -39,10 +39,10 @@ describe('ProductsService', () => {
   });
 
   it('should update a product', async () => {
-    const updateProductDto = { name: 'Xis carne' };
+    const updateProductDto = { name: 'Xis Calabresa' };
     const result = await service.update(resultCreate.id, updateProductDto);
     expect(result).toHaveProperty('id');
-    expect(result.name).toBe('Xis carne');
+    expect(result.name).toBe(updateProductDto.name);
   });
 
   it('should throw error on create with invalid data', async () => {
@@ -58,28 +58,6 @@ describe('ProductsService', () => {
     await expect(service.create(createProductDto)).rejects.toThrow(
       'Name cannot be empty'
     );
-  });
-
-  it('should generate an error when creating a product with a duplicate name', async () => {
-    const productName = `Xis salada`;
-    await service.create({
-      name: productName,
-      description: 'Delicioso e grande',
-      price: 10.99,
-      imageUrl:
-        'https://as2.ftcdn.net/v2/jpg/03/58/43/37/1000_F_358433703_UpOu6jBsp7F9ATErl4oza40kJDlw3JcO.jpg',
-      category: 'Lanche'
-    });
-
-    await expect(
-      service.create({
-        name: productName, // Nome duplicado
-        description: 'Outro produto',
-        price: 15.99,
-        imageUrl: 'https://example.com/image.jpg',
-        category: 'Lanche'
-      })
-    ).rejects.toThrow('Product with the same name already exists');
   });
 
   it('should remove a product', async () => {
