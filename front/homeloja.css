@@ -33,12 +33,12 @@
     font-weight: 700;
     font-size: 3.8vh;
     height: 90%;
-    border: 2px solid green; /* Borda verde */
+    
 }
 
 #logoacabeca {
     height: 100%;
-    border: 2px solid rgb(0, 9, 128); /* Borda verde */
+   
 }
 
 #alinhadireita {
@@ -46,7 +46,7 @@
     align-items: center;
     justify-content: flex-end;
     width: 70%;
-    border: 2px solid green; /* Borda verde */
+  
 }
 
 #caixa-pesquisa {
@@ -98,8 +98,7 @@
     justify-content: center;
     align-items: center;
     height: 3.5vw;
-    
-    border: 2px solid pink; /* Borda rosa */
+    margin: 1vw;
 }
 
 #imagemcarrinho {
