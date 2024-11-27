@@ -234,11 +234,13 @@
                 totalPrice: totalPrice,
                 paymentMethod: paymentMethod,
                 items: items.map(item => ({
-                    productId: item.productId,
-                    quantity: item.quantity,
-                    unitPrice: item.unitPrice
+                    productId: item.id,
+                    quantity: item.quantidade,
+                    unitPrice: item.price
                 }))
             };
+
+            console.log("Dados da requisição:", JSON.stringify(orderData));//teste
 
             try {
                 const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/orders', {
@@ -253,9 +255,10 @@
                     const data = await response.json();
                     alert('Pedido confirmado com sucesso!');
                     console.log(data);
-                    // Redirecionar ou atualizar a página conforme necessário
+                    
                 } else {
                     alert('Erro ao criar o pedido. Tente novamente mais tarde.');
+                    console.log("Erro na requisição:", response);
                 }
             } catch (error) {
                 console.error('Erro ao enviar pedido:', error);
