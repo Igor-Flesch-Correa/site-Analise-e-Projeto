@@ -291,6 +291,8 @@
             const produtosCarrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
             const total = produtosCarrinho.reduce((acc, produto) => acc + (produto.price * produto.quantidade), 0);
             document.getElementById('total-valor').textContent = total.toFixed(2).replace('.', ',');
+
+            localStorage.setItem('totalCarrinho', total.toFixed(2));//salva localmente
         }
 
 

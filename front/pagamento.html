@@ -206,65 +206,67 @@
         //função finalização historico pagamento
 
          // Função para calcular o total do carrinho
-    function calcularTotalCarrinho() {
-        // Aqui você vai somar os itens do carrinho
-        let carrinho = JSON.parse(localStorage.getItem('carrinho')) || [];
-        let total = 0;
+         function calcularTotalCarrinho() {
+            // Obtém o total do carrinho diretamente do localStorage
+            const total = localStorage.getItem('totalCarrinho');
 
-        carrinho.forEach(item => {
-            total += item.quantity * item.unitPrice;
-        });
-
-        document.getElementById('total-price-value').innerText = total.toFixed(2);
-        return total;
-    }
-
-    // Função para confirmar o pedido
-    async function confirmarPedido() {
-        const userId = JSON.parse(localStorage.getItem('user')).id;  // Pega o id do usuário logado
-        const totalPrice = calcularTotalCarrinho();
-        const paymentMethod = document.getElementById('paymentMethod').value;
-        const items = JSON.parse(localStorage.getItem('carrinho')) || [];
-
-        // Corpo da requisição
-        const orderData = {
-            status: 'OPEN',
-            customerId: userId,
-            totalPrice: totalPrice,
-            paymentMethod: paymentMethod,
-            items: items.map(item => ({
-                productId: item.productId,
-                quantity: item.quantity,
-                unitPrice: item.unitPrice
-            }))
-        };
-
-        try {
-            const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/orders', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(orderData)
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                alert('Pedido confirmado com sucesso!');
-                console.log(data);
-                // Redirecionar ou atualizar a página conforme necessário
+            if (total) {
+                // Exibe o total na tela formatado
+                document.getElementById('total-price-value').innerText = parseFloat(total).toFixed(2).replace('.', ',');
+                return parseFloat(total);
             } else {
-                alert('Erro ao criar o pedido. Tente novamente mais tarde.');
+                console.error("Total não encontrado no localStorage");
+                return 0;
             }
-        } catch (error) {
-            console.error('Erro ao enviar pedido:', error);
-            alert('Erro ao enviar o pedido. Tente novamente mais tarde.');
         }
-    }
+
+        // Função para confirmar o pedido
+        async function confirmarPedido() {
+            const userId = JSON.parse(localStorage.getItem('user')).id;  // Pega o id do usuário logado
+            const totalPrice = calcularTotalCarrinho();
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const items = JSON.parse(localStorage.getItem('carrinho')) || [];
+
+            // Corpo da requisição
+            const orderData = {
+                status: 'OPEN',
+                customerId: userId,
+                totalPrice: totalPrice,
+                paymentMethod: paymentMethod,
+                items: items.map(item => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    unitPrice: item.unitPrice
+                }))
+            };
+
+            try {
+                const response = await fetch('https://casadossabores.yjwxjj.easypanel.host/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(orderData)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert('Pedido confirmado com sucesso!');
+                    console.log(data);
+                    // Redirecionar ou atualizar a página conforme necessário
+                } else {
+                    alert('Erro ao criar o pedido. Tente novamente mais tarde.');
+                }
+            } catch (error) {
+                console.error('Erro ao enviar pedido:', error);
+                alert('Erro ao enviar o pedido. Tente novamente mais tarde.');
+            }
+        }
         
         document.addEventListener('DOMContentLoaded', () => {
                 
                 atualizarStatusLogin();
+                calcularTotalCarrinho();
                 
             });
    </script>
