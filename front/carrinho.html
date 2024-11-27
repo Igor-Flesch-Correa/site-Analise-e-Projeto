@@ -53,10 +53,10 @@
             </div>
         </section>
 
-        <!-- Carrinho -->
+        <!-- Carrinho ------------------------------------------------------>
         <section id="primeira">
             <div id="produtos-carrinho" class="caixa">
-                <!-- Produtos carregados dinamicamente irão aparecer aqui -->
+                <!-- Produtos carregados dinamicamente  -->
             </div>
             <div class="caixaPagamento">
                 <div id="listagem">
@@ -211,12 +211,14 @@
             container.innerHTML = '';
             resumo.innerHTML = '';
 
-            if (produtosCarrinho.length === 0) {
-                carrinhoVazio.style.display = 'block';
-                atualizarTotal();
-                return;
-            } else {
-                carrinhoVazio.style.display = 'none';
+            if (carrinhoVazio) {
+                if (produtosCarrinho.length === 0) {
+                    carrinhoVazio.style.display = 'block';
+                    atualizarTotal();
+                    return;
+                } else {
+                    carrinhoVazio.style.display = 'none';
+                }
             }
 
             produtosCarrinho.forEach(produto => {
@@ -258,8 +260,11 @@
                     carrinho = carrinho.filter(item => item.id !== idProduto);
                 }
                 localStorage.setItem('carrinho', JSON.stringify(carrinho));
+                
                 carregarCarrinho();
+                
             }
+            
         }
 
         // Função para remover um produto do carrinho
@@ -268,12 +273,15 @@
             carrinho = carrinho.filter(item => item.id !== idProduto);
             localStorage.setItem('carrinho', JSON.stringify(carrinho));
             carregarCarrinho();
+           
         }
 
         // Função para limpar o carrinho
         function limparCarrinho() {
             localStorage.removeItem('carrinho');
+            
             carregarCarrinho();
+            
         }
 
         // Função para calcular o total do carrinho
