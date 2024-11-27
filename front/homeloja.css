@@ -134,18 +134,7 @@
     transform: scale(1.1);
 }
 
-#menu-retratil {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    z-index: 2;
-    top: 100%;
-    right: 0;
-    padding: 5%;
-    display: none;
-    backdrop-filter: saturate(100%) blur(30px);
-    border: 2px solid cyan; /* Borda ciano */
-}
+
 /*
 carrossel inicio
 */
@@ -264,7 +253,7 @@ faixa categoria ----------------------------------------
   }
   
   /* Estilo dos quadrados */
-  .quadrado {
+  .categoria {
     padding: 20px;
     text-align: center;
     width: calc(100% / 9 - 20px); /* 9 quadrados em uma linha */
@@ -272,25 +261,26 @@ faixa categoria ----------------------------------------
     border-radius: 10px;
     color: #4A2714;
   }
-  .quadrado:hover {
+  .categoria:hover {
     background-color: #D1B8A1;
-    transform: scale(1.1);
+    transform: scale(1.2);
+    cursor: pointer;
   }
   
-  .quadrado .imagem-svg {
+  .categoria .imagem-svg {
     width: 50px; /* Tamanho da imagem SVG */
     height: 50px;
     margin-bottom: 10px; /* Espaçamento entre a imagem e o texto */
   }
   
-  .quadrado p {
+  .categoria p {
     margin-top: 10px;
     font-size: 1rem;
   }
   
   /* Media Query para orientação Retrato (quando a altura é maior que a largura) */
   @media (orientation: portrait) {
-    .quadrado {
+    .categoria {
       width: calc(33.33% - 20px); /* 3 quadrados por linha no modo retrato */
     }
   }
@@ -324,26 +314,7 @@ fim faixa categoria -----------------------------------
     border: 2px solid gray; /* Borda cinza */
 }
 
-.botao-add-carrinho {
-    border: none;
-    color: #6A994E;
-    padding: 10px 20px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin-top: 8%;
-    cursor: pointer;
-    border-radius: 5px;
-    z-index: 5;
-    background: linear-gradient(30deg, #4A2714 65%, #7a5b3e 99%);
-    background-size: 100% 100%;
-    border: 2px solid #000000; /* Borda vermelha */
-}
 
-.botao-add-carrinho:hover {
-    transform: scale(1.05);
-}
 
 .produto {
     display: flex;
@@ -351,7 +322,7 @@ fim faixa categoria -----------------------------------
     border: 2px solid #4A2714; /* Borda aqua */
     color: #4A2714;
     width: 19%;
-    height: 24vw;
+    height: 35vw;
     margin: 0.5%;
     margin-bottom: 1%;
     border-radius: 10px;
@@ -376,6 +347,28 @@ fim faixa categoria -----------------------------------
     padding: 10px;
 }
 
+.botao-add-carrinho {
+
+    color: #6A994E;
+    padding: 1vw 2vw;
+    text-align: center;
+    font-size: 1.4vw;
+    margin-top: 30.5%;
+    margin-left: 0.8%;
+    cursor: pointer;
+    border-radius: 5px;
+    background: linear-gradient(30deg, #4A2714 65%, #7a5b3e 99%);
+    background-size: 100% 100%;
+    border: 2px solid #000000; /* Borda vermelha */
+    position: absolute;
+    
+    
+    
+}
+
+.botao-add-carrinho:hover {
+    transform: scale(1.05);
+}
 #esquerdaPrimeira {
     display: flex;
     border: 2px solid red; /* Borda vermelha */
@@ -386,19 +379,6 @@ fim faixa categoria -----------------------------------
     justify-content: center;
 }
 
-#caixavidro {
-    display: flex;
-    flex-direction: column;
-    font-size: 4.7vh;
-    width: 80%;
-    height: 90%;
-    border-radius: 30px;
-    align-items: center;
-    justify-content: space-around;
-    padding: 2vh 1vw 3vh;
-    backdrop-filter: saturate(100%) blur(30px);
-    border: 2px solid teal; /* Borda azul-verde */
-}
 
 #direitaPrimeira {
     display: flex;
@@ -416,16 +396,13 @@ fim faixa categoria -----------------------------------
         height: 150vh;
     }
 
-    .caixa {
-        flex-direction: column;
-    }
-
-    #caixavidro {
-        width: 96%;
-    }
-
     #direitaPrimeira {
         min-height: 50vh;
+    }
+    .produto {
+        width: 48%;
+       
+       
     }
 }
 

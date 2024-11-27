@@ -7,9 +7,7 @@
     
 }
 /*---------------------------------------------------------------------------------------------*/
-.bloco{
 
-}
 #cabeca {
     display: flex;
     justify-content: space-between;
@@ -336,9 +334,6 @@
         #caixavidro{width: 96%;}
 
         #direitaPrimeira{min-height: 50vh;}
-        
-        .botao{}
-
 
         }
 

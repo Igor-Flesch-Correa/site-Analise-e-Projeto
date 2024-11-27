@@ -61,39 +61,39 @@
               <h2>Escolha a partir da sua categoria favorita!</h2>
             </div>
             <div class="quadrados-container">
-              <div class="quadrado">
+              <div class="categoria" data-categoria="destaques">
                 <img src="img/categoria-01.svg" alt="Destaques" class="imagem-svg">
                 <p>Destaques</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="pizza">
                 <img src="img/categoria-02.svg" alt="Pizza" class="imagem-svg">
                 <p>Pizza</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="burger">
                 <img src="img/categoria-03.svg" alt="Burger" class="imagem-svg">
                 <p>Burger</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="massas">
                 <img src="img/categoria-04.svg" alt="Massas" class="imagem-svg">
                 <p>Massas</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="carnes">
                 <img src="img/categoria-05.svg" alt="Carnes" class="imagem-svg">
                 <p>Carnes</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="peixes">
                 <img src="img/categoria-06.svg" alt="Peixes" class="imagem-svg">
                 <p>Peixes</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="torradas">
                 <img src="img/categoria-07.svg" alt="Torradas" class="imagem-svg">
                 <p>Torradas</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="marmitex">
                 <img src="img/categoria-08.svg" alt="Marmitex" class="imagem-svg">
                 <p>Marmitex</p>
               </div>
-              <div class="quadrado">
+              <div class="categoria" data-categoria="doces">
                 <img src="img/categoria-09.svg" alt="Doces" class="imagem-svg">
                 <p>Doces</p>
               </div>
@@ -195,25 +195,16 @@
         // Inicializar
         mostrarSlide(0);
 
-// Função para carregar produtos
-async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
+// Função para carregar produtos-----------------------------------------------------------
+
+// Variável global para armazenar a categoria ativa
+let categoriaAtiva = '';
+
+async function fetchProdutos(page = 1, limit = 10, category ='' ) {
     try {
-        // Construindo a URL com os parâmetros
+        //  URL api
         const apiUrl = `https://casadossabores.yjwxjj.easypanel.host/products?page=${page}&limit=${limit}&category=${category}`;
 
-        //teste
-        console.log("Enviando requisição:");
-        console.log({
-            url: apiUrl,
-            method: 'GET',
-            
-            headers: {
-                'Accept': '*/*'
-            },
-        });
-
-        //fim teste
-        
         // Fazendo a requisição à API
         const response = await fetch(apiUrl, {
             method: 'GET', // Método HTTP
@@ -226,13 +217,11 @@ async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
         
         const data = await response.json();
 
-        // Mostrar resposta JSON em um popup
-        alert("Resposta recebida com sucesso!");
-        alert(`Resposta JSON: ${JSON.stringify(data, null, 2)}`);
+       
 
         // Renderizar produtos no container
         renderizarProdutos(data.data);
-        configurarPaginacao(data.totalPages, parseInt(data.page));
+        configurarPaginacao(data.totalPages, parseInt(data.page), category);
     } catch (error) {
         console.error(error);
 
@@ -253,9 +242,9 @@ async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
                 <div class="informacoes">
                     <h3>${produto.name}</h3>
                     <p>${produto.description}</p>
-                    <p>Preço: R$ ${produto.price.toFixed(2)}</p>
-                    <button class="botao-add-carrinho" onclick="addToCart(${produto.id})">Add ao Carrinho +</button>
+                    <p>Preço: R$ ${produto.price.toFixed(2)}</p>    
                 </div>
+                <button class="botao-add-carrinho" onclick="addToCart(${produto.id})">Add ao Carrinho +</button>
             </div>
         `).join('');
     }
@@ -272,25 +261,25 @@ async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
                     <h3>Produto Indisponível</h3>
                     <p>Descrição não disponível</p>
                     <p>Preço: R$ 0,00</p>
-                    <button class="botao-add-carrinho">Add ao Carrinho +</button>
-                </div>
+                 </div>
+                <button class="botao-add-carrinho">Add ao Carrinho +</button>
             </div>
         `).join('');
     }
 
     // Função para configurar paginação
-    function configurarPaginacao(totalPaginas, paginaAtual) {
-        const paginacaoContainer = document.getElementById('paginacao');
-        paginacaoContainer.innerHTML = `
-            <button onclick="fetchProdutos(1)">&lt;&lt;</button>
-            <button onclick="fetchProdutos(${Math.max(1, paginaAtual - 1)})">&lt;</button>
-            ${Array.from({ length: totalPaginas }, (_, i) => `
-                <button onclick="fetchProdutos(${i + 1})" ${i + 1 === paginaAtual ? 'disabled' : ''}>${i + 1}</button>
-            `).join('')}
-            <button onclick="fetchProdutos(${Math.min(totalPaginas, paginaAtual + 1)})">&gt;</button>
-            <button onclick="fetchProdutos(${totalPaginas})">&gt;&gt;</button>
-        `;
-    }
+    function configurarPaginacao(totalPaginas, paginaAtual, categoria = '') {
+    const paginacaoContainer = document.getElementById('paginacao');
+    paginacaoContainer.innerHTML = `
+        <button onclick="fetchProdutos(1, 10, '${categoria}')">&lt;&lt;</button>
+        <button onclick="fetchProdutos(${Math.max(1, paginaAtual - 1)}, 10, '${categoria}')">&lt;</button>
+        ${Array.from({ length: totalPaginas }, (_, i) => `
+            <button onclick="fetchProdutos(${i + 1}, 10, '${categoria}')" ${i + 1 === paginaAtual ? 'disabled' : ''}>${i + 1}</button>
+        `).join('')}
+        <button onclick="fetchProdutos(${Math.min(totalPaginas, paginaAtual + 1)}, 10, '${categoria}')">&gt;</button>
+        <button onclick="fetchProdutos(${totalPaginas}, 10, '${categoria}')">&gt;&gt;</button>
+    `;
+}
 
     // Função para adicionar ao carrinho
     function addToCart(idProduto) {
@@ -299,7 +288,8 @@ async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
 
     // Função para filtrar produtos por categoria
     function filtrarProdutos(categoria) {
-        fetchProdutos(1, 10, categoria);
+    categoriaAtiva = categoria; // Atualiza a categoria ativa
+    fetchProdutos(1, 10, categoria); // Carrega os produtos
     }
 
     // Função para pesquisar produtos
@@ -310,13 +300,16 @@ async function fetchProdutos(page = 1, limit = 10, category ='Lanche' ) {
 
     // Inicialização
     document.addEventListener('DOMContentLoaded', () => {
-        fetchProdutos(); // Carregar produtos sem categoria inicialmente
 
-
-        // Adicionar eventos para os botões de categoria
-        document.querySelectorAll('.botaoCategoria').forEach(botao => {
-            botao.addEventListener('click', () => filtrarProdutos(botao.dataset.categoria));
+        document.querySelectorAll('.categoria').forEach(div => {//logica botoes de categorias
+            div.addEventListener('click', () => {
+                const categoria = div.dataset.categoria; // Pega o valor do data-categoria
+                filtrarProdutos(categoria); // Chama a função com a categoria selecionada
+            });
         });
+
+        fetchProdutos(); // Carregar produtos sem categoria 
+
         verificarLogin(); // chama função login ao carregar pag
     });
 </script>
