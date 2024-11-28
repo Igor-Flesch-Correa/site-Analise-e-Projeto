@@ -1,4 +1,4 @@
-# Casa dos Sabores - Trabalho da disciplina de **Análise e Projeto de Sistemas**.
+# Casa dos Sabores - Trabalho de **Análise e Projeto de Sistemas**.
 
 ## API - Backend
 
@@ -48,6 +48,8 @@ Técnologias Utilizadas na api: <br/>
 <img src="https://github.com/devicons/devicon/blob/master/icons/typescript/typescript-original.svg" alt="typescript" width="70" height="70"/>
 <img src="https://github.com/devicons/devicon/blob/master/icons/prisma/prisma-original.svg" alt="prisma" width="70" height="70"/>
 <img src="https://jestjs.io/img/jest.png" alt="jest" width="70" height="70"/>
+
+<br/> 
 
 ## Frontend
 
