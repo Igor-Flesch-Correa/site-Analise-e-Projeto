@@ -1,6 +1,4 @@
-# site-Analise-e-Projeto
-
-Trabalho da disciplina de **Análise e Projeto de Sistemas**.
+# Casa dos Sabores - Trabalho da disciplina de **Análise e Projeto de Sistemas**.
 
 ## API - Backend
 
