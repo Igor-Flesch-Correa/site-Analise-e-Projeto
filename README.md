@@ -71,7 +71,7 @@ Baixe ou clone o repositório para seu computador e acesse a pasta "**front**"
 
 ### Tecnologias usadas:
 👩‍💻 
-Técnologias Utilizadas na api: <br/>
+Técnologias Utilizadas no Front: <br/>
 <img src="https://github.com/devicons/devicon/blob/master/icons/javascript/javascript-original.svg" alt="js" width="70" height="70"/>
 <img src="https://github.com/devicons/devicon/blob/master/icons/html5/html5-original.svg" alt="html" width="70" height="70"/>
 <img src="https://github.com/devicons/devicon/blob/master/icons/css3/css3-original.svg" alt="css" width="70" height="70"/>
