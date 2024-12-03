@@ -35,7 +35,7 @@ model Customer {
 model Order {
   id           Int          @id @default(autoincrement())
   customerId   Int
-  customer     Customer     @relation(fields: [customerId], references: [id])
+  customer     Customer     @relation(fields: [customerId], references: [id], onDelete: Cascade)
   items        Json
   totalPrice   Float
   paymentMethod String
