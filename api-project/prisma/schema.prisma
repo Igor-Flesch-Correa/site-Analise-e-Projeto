@@ -46,7 +46,7 @@ model Order {
 model Address {
   id          Int      @id @default(autoincrement())
   customerId  Int
-  customer    Customer @relation(fields: [customerId], references: [id])
+  customer    Customer @relation(fields: [customerId], references: [id], onDelete: Cascade)
   address     String
   number      String
   complement  String?
